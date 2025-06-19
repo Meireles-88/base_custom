@@ -1,0 +1,346 @@
+/* static/css/public_styles.css */
+
+/* IMPORTANTE: Cores e tipografia base VÊM DO custom.css.
+   Aqui, focamos em layout e elementos específicos da área pública. */
+
+/* Adicione padding-top ao body para compensar a navbar fixa */
+body {
+    padding-top: 110px; /* Empurra todo o conteúdo para baixo, garantindo espaço para a navbar. */
+    /* Mantenha qualquer outro estilo de body que você já tenha aqui, por exemplo, fontes, cores de fundo. */
+    display: flex; /* Adicionado para flexbox layout */
+    flex-direction: column; /* Adicionado para flexbox layout */
+    min-height: 100vh; /* Garante que o body ocupe a altura total da viewport */
+}
+
+/* Navbar Flutuante */
+.public-header-navbar-floating {
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(60, 64, 67, 0.1); /* Sombra mais pronunciada para 'flutuar' */
+    position: fixed; /* Torna a navbar flutuante */
+    top: 20px;       /* Distância do topo */
+    left: 50%;       /* Centraliza horizontalmente */
+    transform: translateX(-50%); /* Ajuste fino para centralização */
+    width: calc(100% - 40px); /* Largura para simular o 'cartão' com margens */
+    max-width: 1200px; /* Limite de largura do cartão */
+    z-index: 1020;   /* Garante que fique acima de outros elementos */
+    border-radius: 16px; /* Bordas arredondadas */
+    padding: 12px 30px; /* Padding interno */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease-in-out; /* Transição suave para efeitos de scroll */
+}
+
+.public-header-navbar-floating .logo-text-si {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--primary-dark); /* Cor do logo */
+    text-decoration: none;
+    letter-spacing: -0.5px;
+}
+
+.public-nav .public-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px; /* Espaçamento entre os itens da navegação */
+}
+
+.public-nav .nav-link-item {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-light); /* Cor padrão dos links */
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+}
+
+.public-nav .nav-link-item:hover,
+.public-nav .nav-link-item.active {
+    color: var(--primary-color); /* Cor ao passar o mouse ou ativo */
+    background-color: var(--secondary-color); /* Fundo suave ao passar o mouse */
+}
+
+/* Botão de Login/Entrar */
+.public-nav .nav-link-item.btn-login {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.public-nav .nav-link-item.btn-login:hover {
+    background-color: var(--primary-dark);
+    color: var(--white); /* Garante que o texto permaneça branca no hover */
+}
+
+/* Botão de Dashboard para usuários logados */
+.public-nav .nav-link-item.btn-dashboard {
+    background-color: var(--accent-color); /* Uma cor diferente para o botão do dashboard */
+    color: var(--text-dark); /* Texto mais escuro para o amarelo */
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.public-nav .nav-link-item.btn-dashboard:hover {
+    background-color: #e0ac00; /* Um tom mais escuro de amarelo no hover */
+    color: var(--text-dark);
+}
+
+/* Efeito da Navbar ao rolar (scrolled) */
+body.scrolled .public-header-navbar-floating {
+    top: 0; /* Cola no topo */
+    width: 100%; /* Ocupa a largura total */
+    border-radius: 0; /* Remove bordas arredondadas */
+    box-shadow: 0 2px 8px rgba(60, 64, 67, 0.08); /* Sombra mais sutil */
+    padding: 10px 30px; /* Padding um pouco menor */
+}
+
+/* Hero Section (Jumbotron) */
+.hero-section {
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-align: center;
+    padding: 150px 30px 100px; /* Ajuste para dar espaço à navbar */
+    margin-bottom: 40px; /* Espaço abaixo do jumbotron */
+    border-radius: 12px; /* Bordas arredondadas para o jumbotron */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Sombra suave */
+}
+
+.hero-section .container {
+    max-width: 900px;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.hero-section .lead {
+    font-size: 1.25rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Espaço entre os botões */
+    flex-wrap: wrap; /* Permite que os botões quebrem para a próxima linha em telas menores */
+}
+
+/* Botões Customizados */
+.btn-primary-custom {
+    background-color: var(--white);
+    color: var(--primary-color);
+    border: 2px solid var(--white);
+    padding: 10px 25px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-dark);
+}
+
+.btn-secondary-custom {
+    background-color: transparent;
+    color: var(--white);
+    border: 2px solid var(--white);
+    padding: 10px 25px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-secondary-custom:hover {
+    background-color: var(--white);
+    color: var(--primary-color);
+}
+
+/* Botões Customizados Grandes (para o jumbotron) */
+.btn-lg-custom {
+    padding: 15px 30px;
+    font-size: 1.15rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+
+/* Wrapper para o conteúdo principal da área pública */
+.public-content-wrapper {
+    max-width: 1200px;
+    margin: 40px auto 40px auto; /* Ajusta margens para centralizar e dar espaço */
+    padding: 0 20px; /* Padding lateral */
+}
+
+
+/* Rodapé */
+.main-footer {
+    background-color: var(--dark-grey);
+    color: var(--white);
+    padding: 30px 0;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: auto; /* Adicionado para empurrar o rodapé para baixo */
+}
+
+.main-footer .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Wrapper para os cartões de conteúdo (seções) */
+.content-cards-wrapper {
+    display: flex;
+    flex-direction: column; /* Padrão em coluna para mobile primeiro */
+    gap: 30px; /* Espaçamento entre os cartões wrapper */
+    margin-bottom: 40px;
+}
+
+/* Cartões de Conteúdo (que podem ser usados em várias seções) */
+.content-card {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--shadow-light); /* Sombra para o efeito de flutuar */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.content-card:hover.hover-effect-card {
+    transform: translateY(-5px); /* Efeito de elevação no hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada no hover */
+}
+
+.content-card h2, .content-card h3 {
+    color: var(--primary-dark);
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.content-card p {
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.content-card .btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.content-card .btn:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Estilos para botões de informação (se existirem, exemplo) */
+.content-card .btn-info {
+    background-color: var(--medium-grey);
+    color: var(--white);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.2s ease-in-out;
+}
+.content-card .btn-info:hover {
+    background-color: #5a6268;
+}
+
+/* Seções de conteúdo geral, para manter o espaçamento */
+.public-section {
+    margin-bottom: 40px; /* Espaço entre seções */
+    padding: 0 15px; /* Manter padding lateral do container */
+}
+
+/* Medias queries para responsividade - ajuste do padding do body e do jumbotron */
+@media (max-width: 768px) {
+    body {
+        padding-top: 90px; /* AJUSTADO: Empurra o conteúdo para baixo em telas menores. */
+    }
+    .public-header-navbar-floating {
+        top: 10px;
+        width: calc(100% - 20px); /* Margens menores em mobile */
+        padding: 10px 15px;
+    }
+    body.scrolled .public-header-navbar-floating {
+        padding: 8px 15px;
+    }
+    .public-header-navbar-floating .logo-text-si {
+        font-size: 1.4rem;
+    }
+    .public-nav .public-nav-list {
+        gap: 10px; /* Reduz o espaçamento entre os links em mobile */
+    }
+    .public-nav .nav-link-item {
+        font-size: 0.95rem;
+        padding: 6px 10px;
+    }
+    .hero-section {
+        /* REMOVIDO: margin-top: 90px; - O padding-top do body agora cuida disso. */
+        padding: 100px 20px 60px; /* Padding menor em mobile */
+        margin-bottom: 30px;
+    }
+    .hero-title {
+        font-size: 2.2rem; /* Título menor em mobile */
+    }
+    .hero-buttons .btn {
+        width: 100%; /* Botões do hero ocupam largura total em mobile */
+        margin-bottom: 10px; /* Espaçamento entre botões empilhados */
+    }
+    .hero-buttons .btn:last-child {
+        margin-bottom: 0;
+    }
+    .content-cards-wrapper {
+        flex-direction: column; /* Cartões empilham em mobile */
+        gap: 20px; /* Espaçamento entre os cartões wrapper em mobile */
+        padding: 0 10px; /* Reduz padding lateral */
+    }
+    .card-grid {
+        grid-template-columns: 1fr; /* Garante uma coluna em mobile */
+        gap: 15px; /* Reduz espaçamento na grade em mobile */
+    }
+    .main-footer {
+        padding: 20px 15px; /* Ajusta padding do rodapé */
+    }
+}
+
+@media (min-width: 769px) {
+    .hero-section {
+        padding: 180px 40px 120px; /* Padding maior em desktop */
+    }
+    .hero-title {
+        font-size: 3.5rem; /* Título maior em desktop */
+    }
+    .content-cards-wrapper {
+        flex-direction: row; /* Volta para linha em desktop */
+        flex-wrap: wrap; /* Permite que os cartões quebrem */
+        justify-content: space-between; /* Espaço entre os cartões */
+    }
+    .content-cards-wrapper .content-card {
+        flex: 1; /* Permite que os cartões cresçam */
+        min-width: 300px; /* Largura mínima para evitar que fiquem muito pequenos */
+        max-width: calc(50% - 15px); /* Dois cartões por linha com gap */
+    }
+    .card-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Grid responsivo para múltiplos cartões */
+    }
+}

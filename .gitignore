@@ -1,0 +1,52 @@
+# Python
+*.pyc
+__pycache__/
+*.egg-info/
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+venv/
+env/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.hypothesis/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+htmlcov/
+.DS_Store # macOS files
+.Trashes # macOS files
+Icon? # macOS files
+ehthumbs.db # Windows files
+Thumbs.db # Windows files
+
+# Django specific
+*.log
+*.pot
+*.mo
+*.db
+local_settings.py
+db.sqlite3
+media/ # Para uploads de usuários, se você tiver uma pasta 'media'
+
+# IDEs and Editors
+.idea/ # PyCharm
+.vscode/ # VS Code
+*.sublime-project
+*.sublime-workspace
+.project
+.pydevproject
+
+# Environment variables
+.env

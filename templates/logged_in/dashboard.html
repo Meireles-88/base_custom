@@ -1,0 +1,27 @@
+{# templates/logged_in/dashboard.html #}
+{% extends 'logged_in/base_logged_in.html' %}
+
+{% block title %}Dashboard - Sistema SI{% endblock %}
+
+{% block logged_in_content %}
+    <div class="dashboard-content">
+        <h1 class="page-header-title">Dashboard</h1>
+        
+        <div class="card-grid">
+            <div class="dashboard-card">
+                <h3>Informações do Perfil</h3>
+                <p>Visualize e edite seus dados pessoais.</p>
+                <a href="#" class="btn btn-primary-custom">Meu Perfil</a>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>Informações do Perfil</h3>
+                <p>Visualize e edite seus dados pessoais.</p>
+                <a href="#" class="btn btn-primary-custom">Meu Perfil</a>
+            </div>
+
+            {# Você pode adicionar mais cartões ou módulos aqui #}
+        </div>
+
+    </div>
+{% endblock %}

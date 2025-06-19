@@ -1,0 +1,48 @@
+{# templates/public/login.html #}
+{% extends 'public/base_public.html' %} {# Herda do base da área pública #}
+
+{% block title %}Entrar - Sistema SI{% endblock %} {# Título mais específico #}
+
+{% block main_public_content %} {# Usamos o novo bloco principal #}
+    <div class="login-container"> {# Novo container para centralizar o cartão #}
+        {# NOVO: Coluna mais estreita para o formulário de login #}
+        {# A classe col-md-5 col-lg-4 é boa, mas o max-width no CSS já garante o tamanho #}
+        <div class="col-12"> {# Apenas para manter a estrutura de grid do Bootstrap, o .login-card terá seu próprio max-width #}
+            {# A classe content-card foi substituída por login-card para estilos mais específicos #}
+            <div class="login-card"> {# Aplicando a nova classe de cartão de login #}
+                <div class="card-header">
+                    <h4 class="text-center">Acesse sua Conta</h4> {# Título mais centralizado e com cor mais escura #}
+                </div>
+                <div class="card-body">
+                    {% if form.errors %}
+                        <p class="alert alert-danger text-center">Nome de usuário ou senha inválidos.</p>
+                    {% endif %}
+
+                    {% if next %}
+                        {% if user.is_authenticated %}
+                            <p class="alert alert-warning text-center">Sua conta não tem acesso a esta página. Para prosseguir, por favor, faça login com uma conta que tenha acesso.</p>
+                        {% else %}
+                            <p class="alert alert-info text-center">Por favor, faça login para ver esta página.</p>
+                        {% endif %}
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %} {# Tag de segurança obrigatória no Django #}
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">Usuário:</label> {# Remove o estilo inline #}
+                            <input type="text" name="username" id="id_username" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label">Senha:</label> {# Remove o estilo inline #}
+                            <input type="password" name="password" id="id_password" class="form-control" required>
+                        </div>
+                        <div class="d-grid gap-2"> {# Bootstrap 5 class for full-width button #}
+                            <button type="submit" class="btn btn-primary-custom">Entrar</button>
+                        </div>
+                        <input type="hidden" name="next" value="{{ next }}">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main_public_content %}

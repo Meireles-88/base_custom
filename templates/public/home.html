@@ -1,0 +1,52 @@
+{# templates/public/home.html #}
+{% extends 'public/base_public.html' %}
+
+{% block title %}Página Inicial - Sistema SI{% endblock %}
+
+{% block main_public_content %} {# Usamos o novo bloco principal #}
+    {# A hero-section tem seu próprio background-color (primary-color) e não é um content-card #}
+    <div class="hero-section"> 
+        <div class="container">
+            <h1 class="hero-title">Bem-vindo ao Sistema de Segurança Integrada!</h1>
+            <p class="lead">Plataforma dedicada à otimização e comunicação das operações de segurança pública.</p>
+            <div class="hero-buttons">
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'login' %}" class="btn btn-primary-custom btn-lg-custom">Entrar</a>
+                {% else %}
+                    <a href="{% url 'painel:dashboard' %}" class="btn btn-primary-custom btn-lg-custom">Ir para o Painel</a>
+                {% endif %}
+                <a href="#" class="btn btn-secondary-custom btn-lg-custom">Saber Mais</a>
+            </div>
+        </div>
+    </div>
+
+    {# As outras seções que são cartões agora terão o fundo branco automaticamente via .content-card #}
+    {# Usando .content-cards-wrapper para o layout de coluna/gap entre eles #}\
+    <div class="content-cards-wrapper">
+        <div class="content-card">
+            <h2>O que oferecemos?</h2>
+            <p>Nosso sistema fornece ferramentas poderosas para gerenciar seus dados de forma eficiente, com segurança e praticidade.</p>
+            <p>Explore as funcionalidades e veja como podemos otimizar seu fluxo de trabalho.</p>
+        </div>
+
+        {# Exemplo de uma grade de cartões #}
+        <div class="card-grid public-cards"> {# public-cards pode ser uma classe customizada para o grid se você tiver #}
+            <div class="content-card">
+                <h3>Recurso 1</h3>
+                <p>Descrição breve do Recurso 1 e seus benefícios.</p>
+                <a href="#" class="btn btn-primary-custom">Saiba Mais</a>
+            </div>
+            <div class="content-card">
+                <h3>Recurso 2</h3>
+                <p>Descrição breve do Recurso 2 e suas vantagens.</p>
+                <a href="#" class="btn btn-primary-custom">Saiba Mais</a>
+            </div>
+            <div class="content-card">
+                <h3>Recurso 3</h3>
+                <p>Descrição breve do Recurso 3 e como ele pode ajudar.</p>
+                <a href="#" class="btn btn-primary-custom">Saiba Mais</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock main_public_content %}

@@ -1,0 +1,213 @@
+/* static/css/custom.css */
+
+/* Definição de variáveis CSS para cores e fontes */
+:root {
+    --primary-color: #1A73E8; /* Azul principal */
+    --primary-dark: #1558B5; /* Azul mais escuro para hover/ativo */
+    --secondary-color: #E8F0FE; /* Azul claro para fundos */
+    --accent-color: #FFC107; /* Amarelo para acentos (opcional) */
+
+    --white: #FFFFFF;
+    --light-grey: #F5F5F5;
+    --medium-grey: #CCCCCC;
+    --dark-grey: #343A40; /* Cinza escuro para rodapé/texto principal */
+
+    --text-dark: #333333; /* Texto principal escuro */
+    --text-light: #666666; /* Texto secundário/leve */
+    --border-color: #E0E0E0; /* Cor padrão para bordas */
+    --shadow-light: rgba(0, 0, 0, 0.05); /* Sombra suave */
+
+    --font-family-sans: 'Roboto', sans-serif;
+    --font-family-serif: 'Merriweather', serif; /* Exemplo de fonte serif */
+}
+
+/* Importação de fontes (ex: Google Fonts) */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+/* Estilos globais/Reset básico */
+body {
+    font-family: var(--font-family-sans);
+    line-height: 1.6;
+    color: var(--text-dark);
+    margin: 0; /* Garante que não há margens padrão do body */
+    background-color: var(--light-grey); /* Fundo geral mais claro */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* Container de conteúdo - para centralizar e limitar largura */
+.container {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Botões base que podem ser usados em todo o sistema */
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+                border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: var(--white);
+}
+
+/* Estilo para os cartões de conteúdo gerais (usado tanto em public quanto em logged-in) */
+.content-card {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--shadow-light);
+    padding: 30px;
+    margin-bottom: 20px; /* Adicionado para espaçamento entre cartões empilhados */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.content-card:hover.hover-effect-card {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos de título e parágrafo dentro dos cartões */
+.content-card h2, .content-card h3 {
+    color: var(--primary-dark);
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.content-card p {
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Estilo para botões dentro de cartões */
+.content-card .btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.content-card .btn:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Estilos para botões de informação (se existirem, exemplo) */
+.content-card .btn-info {
+    background-color: var(--medium-grey);
+    color: var(--white);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.2s ease-in-out;
+}
+.content-card .btn-info:hover {
+    background-color: #5a6268;
+}
+
+/* Seções de conteúdo geral, para manter o espaçamento */
+.public-section {
+    margin-bottom: 40px; /* Espaço entre seções */
+    padding: 0 15px; /* Manter padding lateral do container */
+}
+
+/* Medias queries para responsividade - ajuste do padding do body e do jumbotron */
+@media (max-width: 768px) {
+    body {
+        padding-top: 80px; /* Ajuste para navbar em telas menores */
+    }
+    .public-header-navbar-floating {
+        top: 10px; /* Mais perto do topo em telas pequenas */
+        width: calc(100% - 20px); /* Menos margem */
+        padding: 8px 15px;
+        border-radius: 8px;
+    }
+    body.scrolled .public-header-navbar-floating {
+        padding: 6px 12px; /* Ainda menor ao rolar */
+    }
+    .hero-section {
+        padding: 100px 20px 60px;
+    }
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    .hero-buttons .btn {
+        width: 100%; /* Botões do hero ocupam largura total em mobile */
+        margin-bottom: 10px;
+    }
+    .hero-buttons .btn:last-child {
+        margin-bottom: 0;
+    }
+    .content-cards-wrapper {
+        flex-direction: column; /* Cartões empilham em mobile */
+        gap: 20px; /* Espaçamento entre os cartões wrapper em mobile */
+        padding: 0 10px; /* Reduz padding lateral */
+    }
+    .card-grid {
+        grid-template-columns: 1fr; /* Garante uma coluna em mobile */
+        gap: 15px; /* Reduz espaçamento na grade em mobile */
+    }
+    .main-footer {
+        padding: 20px 15px; /* Ajusta padding do rodapé */
+    }
+}
+
+@media (min-width: 769px) {
+    .hero-section {
+        padding: 180px 40px 120px; /* Padding maior em desktop */
+    }
+    .hero-title {
+        font-size: 3.5rem; /* Título maior em desktop */
+    }
+    .content-cards-wrapper {
+        flex-direction: row; /* Volta para linha em desktop */
+        flex-wrap: wrap; /* Permite que os cartões quebrem */
+        justify-content: space-between; /* Espaço entre os cartões */
+    }
+    .content-cards-wrapper .content-card {
+        flex: 1; /* Permite que os cartões cresçam */
+        min-width: 300px; /* Largura mínima para evitar que fiquem muito pequenos */
+        max-width: calc(50% - 15px); /* Dois cartões por linha com gap */
+    }
+    .card-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Grid responsivo para múltiplos cartões */
+    }
+}
