@@ -1,0 +1,44 @@
+{# templates/autenticacao/login.html #}
+{% extends 'public/base_public.html' %}
+{% load static %}
+
+{% block title %}Entrar - Sistema de Segurança Integrada{% endblock %}
+
+{% block main_public_content %}
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-8 col-md-5 col-lg-4">
+                <div class="card content-card">
+                    <div class="card-header" style="background-color: transparent; border-bottom: none; padding-bottom: 0;">
+                        <h4 class="text-center" style="color: var(--primary-dark); margin-bottom: 15px;">Acesse sua Conta</h4>
+                        <div class="text-center mb-3">
+                            <img src="{% static 'images/brasao_si.png' %}" alt="Brasão SI" style="height: 60px;">
+                        </div>
+                    </div>
+                    <div class="card-body pt-0">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        <form method="post" action="{% url 'autenticacao:login' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="id_username" class="form-label" style="color: var(--text-dark);">Usuário:</label>
+                                <input type="text" name="username" id="id_username" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_password" class="form-label" style="color: var(--text-dark);">Senha:</label>
+                                <input type="password" name="password" id="id_password" class="form-control" required>
+                            </div>
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary-custom btn-lg-custom">Entrar</button>
+                            </div>
+                            <input type="hidden" name="next" value="{{ next }}">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -80,7 +80,7 @@
             <div class="user-profile-widget">
                 <img src="{% static 'images/avatar_meireles.jpeg' %}" alt="Avatar do Usuário" class="user-avatar-top"> {# Substitua pela imagem real do avatar #}
                 <span class="user-name-top">{{ user.username }}</span>
-                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                <form action="{% url 'autenticacao:logout' %}" method="post" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit" class="logout-link ">Sair</button>
                 </form>

@@ -2,7 +2,6 @@
 #estrutura.txt
 
 
-
 base_custom/
 │
 ├── core/                  # Projeto principal
@@ -32,42 +31,31 @@ base_custom/
 │   ├── images/
 │   │
 │   └── js/
+│       ├── public_scripts.js   # JS para efeitos da navbar flutuante
+│       └── ...
 │
-│
-├── templates/             # Templates globais
-│   ├── base.html
-│   └── templates_de_um_modulo_que_herdara_base/ # exemplo de pasta que contera o nome de um modulo e contera os templates desse modulo, sendo que herdará herdara o modulo base.
-│
-│
-└── venv/
-
-
-
-
-
-base_custom/
-├── core/
-│   └── settings.py
-│   └── urls.py
-├── painel/
-│   └── views.py
-│   └── urls.py
 ├── templates/
-│   ├── base.html             # Base global, minimalista
+│   ├── base.html               # Base global, minimalista
 │   ├── public/
-│   │   ├── base_public.html  # Base da área pública (com a navbar)
-│   │   └── home.html         # Página inicial que herda de base_public
-│   └── logged_in/
-│       └── base_logged_in.html # Base da área logada (futura navbar diferente)
-│       └── dashboard.html    # Dashboard que herda de base_logged_in
-├── static/
-│   └── css/
-│       ├── custom.css        # CSS global, cores, tipografia, resets
-│       └── public_styles.css # **Seu CSS específico para a área pública - foco aqui!**
-│       ├── logged_in_styles.css # CSS específico para área logada (futuro)
-│       └── bootstrap.min.css
-│       └── ...
-│   └── js/
-│       └── public_scripts.js # JS para efeitos da navbar flutuante
-│       └── ...
-└── manage.py
+│   │   ├── base_public.html    # Base da área pública (com a navbar)
+│   │   ├── home.html           # Página inicial que herda de base_public
+│   │   └── login.html          <-- Estende base_public.html (formulário de login)
+│   ├── logged_in/
+│   │   ├── base_logged_in.html # Base da área logada (futura navbar diferente)
+│   │   ├── dashboard.html      # Dashboard que herda de base_logged_in
+│   │   └── profile.html        #Estende base_logged_in.html (conteúdo do perfil do usuário)
+│   │
+│   ├──
+│
+├── venv/
+│
+│
+├── painel/
+│   ├── views.py
+│   └── urls.py
+
+
+
+
+
+

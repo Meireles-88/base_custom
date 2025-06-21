@@ -12,7 +12,7 @@
             <p class="lead">Plataforma dedicada à otimização e comunicação das operações de segurança pública municipal.</p>
             <div class="hero-buttons">
                 {% if not user.is_authenticated %}
-                    <a href="{% url 'login' %}" class="btn btn-primary-custom btn-lg-custom">Entrar</a>
+                    <a href="{% url 'autenticacao:login' %}" class="btn btn-primary-custom btn-lg-custom">Entrar</a>
                 {% else %}
                     <a href="{% url 'painel:dashboard' %}" class="btn btn-primary-custom btn-lg-custom">Ir para o Painel</a>
                 {% endif %}

@@ -29,14 +29,14 @@
                         </li>
                         <li class="nav-item">
                             {# ALTERAÇÃO AQUI: Formulário POST para logout com CSRF token #}
-                            <form action="{% url 'logout' %}" method="post" style="margin: 0; padding: 0;">
+                            <form action="{% url 'autenticacao:logout' %}" method="post" style="margin: 0; padding: 0;">
                                 {% csrf_token %}
                                 <button type="submit" class="nav-link nav-link-item btn-logout">Sair</button>
                             </form>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a href="{% url 'login' %}" class="nav-link nav-link-item btn-login">Entrar</a>
+                            <a href="{% url 'autenticacao:login' %}" class="nav-link nav-link-item btn-login">Entrar</a>
                         </li>
                     {% endif %}
                 </ul>

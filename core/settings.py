@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'painel',
+    'autenticacao',
+    'usuario',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +132,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Redirecionamento após login/logout
 # Usando nomes de URL em vez de caminhos absolutos para maior flexibilidade.
-LOGIN_URL = 'login'
+LOGIN_URL = 'autenticacao:login'
 LOGIN_REDIRECT_URL = 'painel:dashboard'
 LOGOUT_REDIRECT_URL = 'painel:home'
