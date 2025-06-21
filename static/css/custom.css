@@ -24,123 +24,115 @@
 /* Importação de fontes (ex: Google Fonts) */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
-/* Estilos globais/Reset básico */
-body {
+/* Estilos Globais de Body e HMTL */
+html, body {
+    margin: 0;
+    padding: 0;
     font-family: var(--font-family-sans);
-    line-height: 1.6;
     color: var(--text-dark);
-    margin: 0; /* Garante que não há margens padrão do body */
-    background-color: var(--light-grey); /* Fundo geral mais claro */
+    line-height: 1.6;
+    background-color: var(--light-grey); /* Fundo geral do site */
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
     color: var(--text-dark);
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 0.5em;
+}
+
+p {
+    margin-bottom: 1em;
 }
 
 a {
     color: var(--primary-color);
     text-decoration: none;
+    transition: color 0.2s ease-in-out;
 }
 
 a:hover {
     color: var(--primary-dark);
-    text-decoration: underline;
 }
 
-/* Container de conteúdo - para centralizar e limitar largura */
-.container {
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-/* Botões base que podem ser usados em todo o sistema */
+/* Estilos de Botões Personalizados */
 .btn {
     display: inline-block;
     font-weight: 400;
+    line-height: 1.5;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
     user-select: none;
     border: 1px solid transparent;
-    padding: 0.375rem 0.75rem;
+    padding: 0.6rem 1.2rem;
     font-size: 1rem;
-    line-height: 1.5;
     border-radius: 0.25rem;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-                border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition: all 0.15s ease-in-out;
+    cursor: pointer;
 }
 
-.btn-primary {
+.btn-primary-custom {
     background-color: var(--primary-color);
     color: var(--white);
     border-color: var(--primary-color);
 }
 
-.btn-primary:hover {
+.btn-primary-custom:hover {
     background-color: var(--primary-dark);
     border-color: var(--primary-dark);
     color: var(--white);
 }
 
-/* Estilo para os cartões de conteúdo gerais (usado tanto em public quanto em logged-in) */
+.btn-secondary-custom {
+    background-color: var(--dark-grey);
+    color: var(--white);
+    border-color: var(--dark-grey);
+}
+
+.btn-secondary-custom:hover {
+    background-color: #212529; /* Um pouco mais escuro */
+    border-color: #212529;
+    color: var(--white);
+}
+
+.btn-danger-custom {
+    background-color: #dc3545; /* Bootstrap danger */
+    color: var(--white);
+    border-color: #dc3545;
+}
+.btn-danger-custom:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+    color: var(--white);
+}
+
+.btn-info-custom {
+    background-color: #6c757d; /* Um cinza do Bootstrap */
+    color: var(--white);
+    border: none;
+}
+.btn-info-custom:hover {
+    background-color: #5a6268;
+}
+
+/* Estilos para cards de conteúdo genéricos */
 .content-card {
     background-color: var(--white);
-    border-radius: 12px;
-    box-shadow: 0 4px 12px var(--shadow-light);
+    border-radius: 15px;
+    box-shadow: var(--shadow-light);
     padding: 30px;
-    margin-bottom: 20px; /* Adicionado para espaçamento entre cartões empilhados */
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    margin-bottom: 20px; /* Espaçamento entre os cartões */
 }
 
-.content-card:hover.hover-effect-card {
+/* Efeitos de Hover para Cards */
+.hover-effect-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-effect-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-/* Estilos de título e parágrafo dentro dos cartões */
-.content-card h2, .content-card h3 {
-    color: var(--primary-dark);
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.content-card p {
-    color: var(--text-light);
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-/* Estilo para botões dentro de cartões */
-.content-card .btn {
-    background-color: var(--primary-color);
-    color: var(--white);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background-color 0.2s ease-in-out;
-}
-
-.content-card .btn:hover {
-    background-color: var(--primary-dark);
-}
-
-/* Estilos para botões de informação (se existirem, exemplo) */
-.content-card .btn-info {
-    background-color: var(--medium-grey);
-    color: var(--white);
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background-color 0.2s ease-in-out;
-}
-.content-card .btn-info:hover {
-    background-color: #5a6268;
+    box-shadow: 0 8px 20px rgba(60, 64, 67, 0.15);
 }
 
 /* Seções de conteúdo geral, para manter o espaçamento */
@@ -208,6 +200,7 @@ a:hover {
         max-width: calc(50% - 15px); /* Dois cartões por linha com gap */
     }
     .card-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Grid responsivo para múltiplos cartões */
+        grid-template-columns: repeat(3, 1fr); /* 3 colunas em desktop */
+        gap: 20px;
     }
 }

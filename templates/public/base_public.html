@@ -1,45 +1,50 @@
+{# templates/public/base_public.html #}
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema SI - Página Pública</title>
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+{% block extra_head %}
+    {# CSS específico da área pública #}
     <link rel="stylesheet" href="{% static 'css/public_styles.css' %}">
+    {# Ícones (se usados apenas na área pública, ou mover para custom.css se globais) #}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
+{% endblock %}
 
+{% block content %}
     <header class="public-header-navbar-floating">
-        <a href="{% url 'painel:home' %}" class="logo-text-si">SI</a>
-        <nav class="public-nav">
-            <ul class="public-nav-list">
-                <li class="nav-item"><a href="{% url 'painel:home' %}" class="nav-link active">Início</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Sobre</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Serviços</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Contato</a></li>
-
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a href="{% url 'painel:dashboard' %}" class="nav-link nav-link-item btn-login">Meu Painel</a>
-                    </li>
-                    <li class="nav-item">
-                        <form action="{% url 'logout' %}" method="post" class="logout-form">
-                            {% csrf_token %}
-                            <button type="submit" class="nav-link nav-link-item btn-login">Sair</button>
-                        </form>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a href="{% url 'login' %}" class="nav-link nav-link-item btn-login">Entrar</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
+        <div class="container navbar-container">
+            {# Logo - AGORA COM O BRASÃO! #}
+            <a href="{% url 'painel:home' %}" class="navbar-brand-logo">
+                <img src="{% static 'images/brasao_si.png' %}" alt="Brasão SI" class="brasao-logo">
+                <span class="logo-text">Sistema SI</span> {# Texto ao lado do brasão, se desejar #}
+            </a>
+            <nav class="public-nav">
+                <ul class="public-nav-list">
+                    <li class="nav-item"><a href="{% url 'painel:home' %}" class="nav-link {% if request.path == '/' %}active{% endif %}">Início</a></li>
+                    <li class="nav-item"><a href="#sobre" class="nav-link">Sobre</a></li>
+                    <li class="nav-item"><a href="#servicos" class="nav-link">Serviços</a></li>
+                    {# Condição de exibição para botões de login/dashboard/logout #}
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a href="{% url 'painel:dashboard' %}" class="nav-link nav-link-item btn-dashboard">Painel</a>
+                        </li>
+                        <li class="nav-item">
+                            {# ALTERAÇÃO AQUI: Formulário POST para logout com CSRF token #}
+                            <form action="{% url 'logout' %}" method="post" style="margin: 0; padding: 0;">
+                                {% csrf_token %}
+                                <button type="submit" class="nav-link nav-link-item btn-logout">Sair</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a href="{% url 'login' %}" class="nav-link nav-link-item btn-login">Entrar</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <main class="public-content-wrapper"> {# Adicionado um wrapper para o conteúdo principal #}
+    <main class="public-content-wrapper"> {# Wrapper para o conteúdo principal da área pública #}
         {% block main_public_content %}
         {# Conteúdo específico de cada página pública será injetado aqui #}
         {% endblock %}
@@ -51,19 +56,25 @@
         </div>
     </footer>
 
+    {% block extra_js %}
+    {# Scripts JS específicos da área pública #}
     <script src="{% static 'js/public_scripts.js' %}"></script>
     <script>
         // Script para adicionar/remover a classe 'scrolled' na navbar
-        window.addEventListener('scroll', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             const navbar = document.querySelector('.public-header-navbar-floating');
-            if (window.scrollY > 50) { // Ajuste este valor conforme necessário
-                navbar.classList.add('scrolled');
-                document.body.classList.add('scrolled'); // Adiciona também ao body para ajustar padding
-            } else {
-                navbar.classList.remove('scrolled');
-                document.body.classList.remove('scrolled');
+            if (navbar) {
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 50) { // Ajuste este valor conforme necessário
+                        navbar.classList.add('scrolled');
+                        document.body.classList.add('scrolled'); // Adiciona também ao body para ajustar padding
+                    } else {
+                        navbar.classList.remove('scrolled');
+                        document.body.classList.remove('scrolled');
+                    }
+                });
             }
         });
     </script>
-</body>
-</html>
+    {% endblock extra_js %}
+{% endblock content %}

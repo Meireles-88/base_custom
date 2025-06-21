@@ -1,52 +1,77 @@
 {# templates/public/home.html #}
 {% extends 'public/base_public.html' %}
+{% load static %}
 
-{% block title %}Página Inicial - Sistema SI{% endblock %}
+{% block title %}Início - Sistema de Segurança Integrada{% endblock %}
 
-{% block main_public_content %} {# Usamos o novo bloco principal #}
-    {# A hero-section tem seu próprio background-color (primary-color) e não é um content-card #}
+{% block main_public_content %}
+    {# Hero Section - Conteúdo Principal #}
     <div class="hero-section"> 
         <div class="container">
             <h1 class="hero-title">Bem-vindo ao Sistema de Segurança Integrada!</h1>
-            <p class="lead">Plataforma dedicada à otimização e comunicação das operações de segurança pública.</p>
+            <p class="lead">Plataforma dedicada à otimização e comunicação das operações de segurança pública municipal.</p>
             <div class="hero-buttons">
                 {% if not user.is_authenticated %}
                     <a href="{% url 'login' %}" class="btn btn-primary-custom btn-lg-custom">Entrar</a>
                 {% else %}
                     <a href="{% url 'painel:dashboard' %}" class="btn btn-primary-custom btn-lg-custom">Ir para o Painel</a>
                 {% endif %}
-                <a href="#" class="btn btn-secondary-custom btn-lg-custom">Saber Mais</a>
+                <a href="#servicos" class="btn btn-secondary-custom btn-lg-custom">Saber Mais</a>
             </div>
         </div>
     </div>
 
-    {# As outras seções que são cartões agora terão o fundo branco automaticamente via .content-card #}
-    {# Usando .content-cards-wrapper para o layout de coluna/gap entre eles #}\
     <div class="content-cards-wrapper">
+        {# Seção "O que oferecemos?" como um content-card #}
         <div class="content-card">
-            <h2>O que oferecemos?</h2>
-            <p>Nosso sistema fornece ferramentas poderosas para gerenciar seus dados de forma eficiente, com segurança e praticidade.</p>
-            <p>Explore as funcionalidades e veja como podemos otimizar seu fluxo de trabalho.</p>
+            <h2>O que o Sistema SI oferece?</h2>
+            <p>Nosso sistema fornece ferramentas poderosas para instituições de segurança pública, permitindo gerenciar dados de forma eficiente, com segurança e praticidade. Explore as funcionalidades e veja como podemos otimizar seu fluxo de trabalho.</p>
         </div>
 
-        {# Exemplo de uma grade de cartões #}
-        <div class="card-grid public-cards"> {# public-cards pode ser uma classe customizada para o grid se você tiver #}
-            <div class="content-card">
-                <h3>Recurso 1</h3>
-                <p>Descrição breve do Recurso 1 e seus benefícios.</p>
-                <a href="#" class="btn btn-primary-custom">Saiba Mais</a>
-            </div>
-            <div class="content-card">
-                <h3>Recurso 2</h3>
-                <p>Descrição breve do Recurso 2 e suas vantagens.</p>
-                <a href="#" class="btn btn-primary-custom">Saiba Mais</a>
-            </div>
-            <div class="content-card">
-                <h3>Recurso 3</h3>
-                <p>Descrição breve do Recurso 3 e como ele pode ajudar.</p>
-                <a href="#" class="btn btn-primary-custom">Saiba Mais</a>
+        {# Exemplo de uma grade de cartões para Recursos #}
+        <div class="content-card" id="servicos"> {# Adicionei ID para linkar do hero #}
+            <h2>Principais Recursos</h2>
+            <div class="card-grid">
+                <div class="content-card small-card"> {# Pode ter uma classe 'small-card' para ajuste de padding/tamanho se necessário #}
+                    <h3><i class="fas fa-file-alt icon-feature"></i> Gestão de Ocorrências</h3>
+                    <p>Centralize e gerencie todas as ocorrências com detalhes, localização e status em tempo real.</p>
+                    <a href="#" class="btn btn-primary-custom btn-sm">Detalhes</a>
+                </div>
+                <div class="content-card small-card">
+                    <h3><i class="fas fa-users icon-feature"></i> Cadastro e Gestão de Usuários</h3>
+                    <p>Administre perfis de usuários, permissões e acessos para diferentes níveis hierárquicos.</p>
+                    <a href="#" class="btn btn-primary-custom btn-sm">Detalhes</a>
+                </div>
+                <div class="content-card small-card">
+                    <h3><i class="fas fa-chart-line icon-feature"></i> Relatórios e Análises</h3>
+                    <p>Obtenha insights valiosos com relatórios detalhados e dashboards interativos para tomadas de decisão.</p>
+                    <a href="#" class="btn btn-primary-custom btn-sm">Detalhes</a>
+                </div>
+                <div class="content-card small-card">
+                    <h3><i class="fas fa-comments icon-feature"></i> Comunicação Integrada</h3>
+                    <p>Plataforma para comunicação eficiente entre equipes, agilizando o fluxo de informações.</p>
+                    <a href="#" class="btn btn-primary-custom btn-sm">Detalhes</a>
+                </div>
             </div>
         </div>
-    </div>
 
-{% endblock main_public_content %}
+        {# Seção "Nossa Missão" #}
+        <div class="content-card" id="sobre"> {# Adicionei ID para linkar do hero #}
+            <h2>Nossa Missão</h2>
+            <p>Garantir a eficácia e a agilidade nas respostas a incidentes, protegendo a população e otimizando os recursos dos órgãos de segurança municipal. Com o Sistema SI, a informação flui de forma integrada, permitindo decisões mais rápidas e coordenadas.</p>
+        </div>
+        
+        {# Nova seção: "Como Funciona" - Exemplo #}
+        <div class="content-card">
+            <h2>Como o Sistema SI Funciona</h2>
+            <p>Nosso sistema simplifica a rotina das instituições de segurança com um fluxo de trabalho intuitivo:</p>
+            <ol>
+                <li>**Registro Fácil:** Cadastre ocorrências e informações de forma rápida e padronizada.</li>
+                <li>**Análise Inteligente:** Utilize ferramentas para analisar dados e identificar padrões.</li>
+                <li>**Coordenação Eficiente:** Compartilhe informações em tempo real com equipes para ações coordenadas.</li>
+                <li>**Relatórios Precisos:** Gere relatórios completos para auditoria e planejamento estratégico.</li>
+            </ol>
+            <a href="#" class="btn btn-secondary-custom">Ver Demonstração</a>
+        </div>
+
+    </div> {% endblock main_public_content %}

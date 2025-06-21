@@ -1,4 +1,5 @@
 {# templates/base.html #}
+
 {% load static %}
 
 <!DOCTYPE html>
@@ -8,41 +9,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Sistema de Segurança Integrada{% endblock %}</title>
 
-    {# Google Fonts - Roboto #}
+    {# Google Fonts - Roboto (global) #}
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
-    {# Bootstrap CSS - Base para responsividade e componentes #}
+    {# Bootstrap CSS - Base para responsividade e componentes globais #}
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     
-    {# Ícones (opcional, se usar) #}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
-    {# Seu CSS Personalizado - Este é o coração do nosso design minimalista e arrojado #}
+    {# Seu CSS Personalizado GLOBAL - Variáveis, resets, e estilos base #}
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     
-    {% block extra_head %}
-    {% endblock %}
+    {# Bloco para CSS e meta tags adicionais por página/área #}
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
-    {# O header aqui será removido ou minimizado, a navbar flutuante vai no base_public.html #}
-    {# Removi a estrutura de header aqui, pois a navbar flutuante será no template específico #}
-
-    <main class="content-wrapper">
-        {% block content %}
-        {# Conteúdo principal da página #}
-        {% endblock %}
+    {# Conteúdo principal será injetado aqui #}
+    <main>
+        {% block content %}{% endblock %}
     </main>
 
-    <footer class="main-footer">
-        <div class="container text-center py-3">
-            <p>&copy; 2025 Estado de São Paulo. Todos os direitos reservados. | Sistema de Segurança Integrada</p>
-        </div>
-    </footer>
-
-    {# Bootstrap JS Bundle #}
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    {# Bootstrap JS e outros scripts globais #}
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script> {# Certifique-se de ter este arquivo em static/js #}
     
-    {% block extra_js %}
-    {% endblock %}
+    {# Bloco para scripts JS adicionais por página/área #}
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

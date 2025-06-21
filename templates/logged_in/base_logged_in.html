@@ -1,136 +1,111 @@
+{# templates/logged_in/base_logged_in.html #}
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SI Dashboard</title>
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+{% block extra_head %}
+    {# Link para o CSS específico da área logada #}
     <link rel="stylesheet" href="{% static 'css/logged_in_styles.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
+    {# NOVO: Link para Bootstrap Icons (removendo Font Awesome) #}
+    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.css' %}">
+{% endblock %}
+
+{% block body_attributes %}
+    {# A classe 'sidebar-minimized-desktop' ou 'sidebar-expanded-desktop' será adicionada aqui pelo JS #}
+    {# E 'sidebar-open-mobile' / 'sidebar-closed-mobile' para mobile #}
+    class="sidebar-minimized-desktop" {# Estado inicial no desktop #}
+{% endblock %}
+
+{% block content %}
     <div class="dashboard-wrapper">
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-top-fixed">
-                <div class="sidebar-header">
-                    {# CORRIGIDO: Referenciando a URL do dashboard com o namespace 'painel' #}
-                    <a href="{% url 'painel:dashboard' %}" class="logo-si-dashboard">SI</a>
-                    <button class="toggle-sidebar" id="sidebarToggle" title="Minimizar Sidebar">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
+        {# Sidebar Principal (A que expande/minimiza em desktop, e é modal em mobile) #}
+        <aside class="sidebar" aria-label="Navegação Principal">
+            <div class="sidebar-header">
+                {# Logo/Ícone visível sempre (AGORA COM BOOTSTRAP ICONS) #}
+                <a href="{% url 'painel:dashboard' %}" class="system-logo" aria-label="Página Inicial do Dashboard">
+                    <img src="{% static 'images/brasao_si.png' %}" alt="Brasão do Sistema" class="system-emblem"> {# Substituído o ícone pelo brasão #}
+                    <span class="logo-text">Segurança Integrada</span> {# Texto "SI" para aparecer quando expandido #}
+                </a>
+                {# Botão para fechar a sidebar (em mobile) - AGORA COM BOOTSTRAP ICONS #}
+                <button class="close-sidebar-mobile-btn d-block d-md-none" aria-label="Fechar Menu Lateral">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+
+            {# NOVA ÁREA: Informações da Instituição #}
+            <div class="institution-info-area">
+                <img src="{% static 'images/brasao_instituicao.png' %}" alt="Brasão da Instituição" class="institution-emblem">
+                <div class="institution-details">
+                    <span class="institution-type">Guarda Civil Municipal</span> {# Exemplo: Polícia Militar, Corpo de Bombeiros #}
+                    <span class="institution-location">Guaira - SP</span> {# Exemplo: São Paulo - SP, Rio de Janeiro - RJ #}
                 </div>
             </div>
 
-            <div class="sidebar-scrollable-content">
-                <div class="sidebar-user-info">
-                    <div class="user-avatar">
-                        <img src="{% static 'images/placeholder_avatar.png' %}" alt="Avatar">
-                    </div>
-                    <div class="user-details">
-                        <span class="user-institution">reservado - nome da ins</span>
-                        <span class="user-municipality">reservado - nome munic</span>
-                    </div>
-                </div>
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item">
+                    <a href="{% url 'painel:dashboard' %}" class="{% if request.resolver_match.view_name == 'painel:dashboard' %}active{% endif %}" aria-current="{% if request.resolver_match.view_name == 'painel:dashboard' %}page{% else %}false{% endif %}">
+                        <i class="bi bi-speedometer"></i> {# Ícone para Dashboard - de 'home' para 'speedometer' #}
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="#" aria-label="Usuários">
+                        <i class="bi bi-people"></i> {# Ícone para Usuários #}
+                        <span>Usuários</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="#" aria-label="Relatórios">
+                        <i class="bi bi-file-earmark-text"></i> {# Ícone para Relatórios #}
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="#" aria-label="Configurações">
+                        <i class="bi bi-gear"></i> {# Ícone para Configurações #}
+                        <span>Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
 
-                <nav class="sidebar-nav">
-                    <ul class="sidebar-menu">
-                        <li>
-                            {# CORRIGIDO: Referenciando a URL do dashboard com o namespace 'painel' #}
-                            <a href="{% url 'painel:dashboard' %}" class="menu-item active">
-                                <i class="fas fa-tachometer-alt menu-icon"></i>
-                                <span class="menu-text">Dashboard</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="menu-item has-submenu">
-                                <i class="fas fa-link menu-icon"></i>
-                                <span class="menu-text">Link - Módulo 1</span>
-                                <i class="fas fa-chevron-down dropdown-icon"></i>
-                            </a>
-                            </li>
-                        <li>
-                            <a href="#" class="menu-item has-submenu">
-                                <i class="fas fa-link menu-icon"></i>
-                                <span class="menu-text">Link - Módulo 2</span>
-                                <i class="fas fa-chevron-down dropdown-icon"></i>
-                            </a>
-                            </li>
-                        <li>
-                            <a href="#" class="menu-item has-submenu">
-                                <i class="fas fa-link menu-icon"></i>
-                                <span class="menu-text">Link - Módulo 3</span>
-                                <i class="fas fa-chevron-down dropdown-icon"></i>
-                            </a>
-                            </li>
-                        </ul>
-                </nav>
+        {# Top Navbar #}
+        <header class="top-navbar">
+            <div class="top-navbar-left">
+                {# Botão de toggle para abrir/fechar a sidebar (AGORA SEMPRE HAMBÚRGUER) #}
+                <button class="toggle-sidebar-btn" aria-expanded="false" aria-controls="sidebar-navigation">
+                    <i class="bi bi-list"></i> {# Ícone sempre 'list' (hambúrguer) #}
+                </button>
+                <span class="current-page-title">Dashboard</span> {# Este texto pode ser dinâmico via JS ou context #}
             </div>
-        </div>
+            <div class="user-profile-widget">
+                <img src="{% static 'images/avatar_meireles.jpeg' %}" alt="Avatar do Usuário" class="user-avatar-top"> {# Substitua pela imagem real do avatar #}
+                <span class="user-name-top">{{ user.username }}</span>
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-link ">Sair</button>
+                </form>
+            </div>
+        </header>
 
-        <div class="main-content-area">
-            <header class="top-navbar">
-                <div class="top-navbar-left">
-                    <button class="toggle-sidebar-mobile" id="mobileSidebarToggle" title="Abrir/Fechar Sidebar">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <span class="current-page-title">Dashboard</span>
-                </div>
-                <div class="user-profile-widget">
-                    <div class="user-avatar-top">
-                        <img src="{% static 'images/placeholder_avatar.png' %}" alt="Avatar">
-                    </div>
-                    <span class="user-name-top">Meireles</span>
-                    <a href="#" class="logout-link">Sair</a>
-                </div>
-            </header>
+        {# Overlay para quando a sidebar estiver aberta em mobile #}
+        <div class="overlay-mobile-sidebar"></div>
 
-            <main class="page-content-wrapper">
-                {% block content %}
-                    <h1 class="page-header-title">Dashboard</h1>
-                    <div class="card-grid">
-                        <div class="dashboard-card">
-                            <h3>Informações do Perfil</h3>
-                            <p>Visualize e edite seus dados pessoais e configurações de conta.</p>
-                            <a href="#" class="btn btn-primary-custom">Meu Perfil</a>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>Gestão de Usuários</h3>
-                            <p>Adicione, edite ou remova usuários do sistema e gerencie permissões.</p>
-                            <a href="#" class="btn btn-primary-custom">Gerenciar Usuários</a>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>Configurações do Sistema</h3>
-                            <p>Ajuste as configurações gerais do sistema para otimizar o desempenho.</p>
-                            <a href="#" class="btn btn-primary-custom">Configurações</a>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>Relatórios e Análises</h3>
-                            <p>Acesse relatórios detalhados e análises de dados para insights.</p>
-                            <a href="#" class="btn btn-primary-custom">Ver Relatórios</a>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>Notificações Recentes</h3>
-                            <p>Fique por dentro das últimas atualizações e alertas do sistema.</p>
-                            <a href="#" class="btn btn-primary-custom">Ver Notificações</a>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>Suporte e Ajuda</h3>
-                            <p>Encontre respostas para suas dúvidas ou entre em contato com o suporte.</p>
-                            <a href="#" class="btn btn-primary-custom">Obter Ajuda</a>
-                        </div>
-                    </div>
-                {% endblock %}
-            </main>
-        </div>
+        {# Conteúdo Principal #}
+        <main class="content-area">
+            {% block dashboard_content %}
+                {# Conteúdo específico de cada página do dashboard será injetado aqui #}
+                
+            {% endblock %}
+        </main>
+
+        {# Rodapé do Dashboard #}
+        <footer class="dashboard-footer">
+            <p>&copy; 2025 Sistema SI - Todos os direitos reservados.</p>
+        </footer>
     </div>
+{% endblock content %}
 
-    <footer class="main-footer">
-        <div class="footer-content">
-            <p>&copy; 2025 Estado de São Paulo. Todos os direitos reservados. | Sistema de Segurança Integrada</p>
-        </div>
-    </footer>
-
-    <script src="{% static 'js/logged_in_scripts.js' %}"></script>
-</body>
-</html>
+{% block extra_js %}
+    {# Incluir o arquivo JavaScript separado para a lógica da sidebar #}
+    <script src="{% static 'js/dashboard_sidebar.js' %}"></script>
+{% endblock %}

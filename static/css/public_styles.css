@@ -5,18 +5,22 @@
 
 /* Adicione padding-top ao body para compensar a navbar fixa */
 body {
-    padding-top: 110px; /* Empurra todo o conteúdo para baixo, garantindo espaço para a navbar. */
-    /* Mantenha qualquer outro estilo de body que você já tenha aqui, por exemplo, fontes, cores de fundo. */
-    display: flex; /* Adicionado para flexbox layout */
-    flex-direction: column; /* Adicionado para flexbox layout */
-    min-height: 100vh; /* Garante que o body ocupe a altura total da viewport */
+    padding-top: 120px; /* Empurra todo o conteúdo para baixo, garantindo espaço para a navbar. */
+}
+
+/* Public Content Wrapper - Para centralizar e limitar a largura do conteúdo principal */
+.public-content-wrapper {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px 15px; /* Padding interno */
 }
 
 /* Navbar Flutuante */
 .public-header-navbar-floating {
     background-color: var(--white);
     border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 4px 12px rgba(60, 64, 67, 0.1); /* Sombra mais pronunciada para 'flutuar' */
+    box-shadow: var(--shadow-medium); /* Sombra mais pronunciada para 'flutuar' */
     position: fixed; /* Torna a navbar flutuante */
     top: 20px;       /* Distância do topo */
     left: 50%;       /* Centraliza horizontalmente */
@@ -24,153 +28,165 @@ body {
     width: calc(100% - 40px); /* Largura para simular o 'cartão' com margens */
     max-width: 1200px; /* Limite de largura do cartão */
     z-index: 1020;   /* Garante que fique acima de outros elementos */
-    border-radius: 16px; /* Bordas arredondadas */
-    padding: 12px 30px; /* Padding interno */
+    border-radius: var(--rounded-corners); /* Cantos arredondados */
+    padding: 15px 30px; /* Padding interno da navbar */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: all 0.3s ease-in-out; /* Transição suave para efeitos de scroll */
+    transition: all 0.3s ease-in-out;
 }
 
-.public-header-navbar-floating .logo-text-si {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--primary-dark); /* Cor do logo */
-    text-decoration: none;
-    letter-spacing: -0.5px;
+.public-header-navbar-floating.scrolled {
+    top: 0; /* Cola no topo ao rolar */
+    width: 100%; /* Expande para toda a largura */
+    border-radius: 0; /* Remove borda arredondada */
+    box-shadow: var(--shadow-strong); /* Sombra mais forte */
+    padding: 10px 30px; /* Reduz padding ao rolar */
 }
+
+.public-header-navbar-floating .navbar-brand-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--primary-dark);
+    font-weight: 700;
+    font-size: 1.6rem; /* Tamanho da fonte do texto ao lado do brasão */
+}
+
+.public-header-navbar-floating .brasao-logo {
+    height: 40px; /* Tamanho do brasão na navbar */
+    margin-right: 10px;
+    transition: height 0.3s ease-in-out;
+}
+
+.public-header-navbar-floating.scrolled .brasao-logo {
+    height: 30px; /* Brasão menor ao rolar */
+}
+
+/* Ocultar texto do logo em mobile ou quando brasão for suficiente */
+/*
+.public-header-navbar-floating .logo-text {
+    display: none;
+}
+@media (min-width: 769px) {
+    .public-header-navbar-floating .logo-text {
+        display: inline;
+    }
+}
+*/
 
 .public-nav .public-nav-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
-    gap: 20px; /* Espaçamento entre os itens da navegação */
+    gap: 25px; /* Espaçamento entre os links */
+    align-items: center;
 }
 
-.public-nav .nav-link-item {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--text-light); /* Cor padrão dos links */
-    text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 6px;
-    transition: all 0.2s ease-in-out;
-}
-
-.public-nav .nav-link-item:hover,
-.public-nav .nav-link-item.active {
-    color: var(--primary-color); /* Cor ao passar o mouse ou ativo */
-    background-color: var(--secondary-color); /* Fundo suave ao passar o mouse */
-}
-
-/* Botão de Login/Entrar */
-.public-nav .nav-link-item.btn-login {
-    background-color: var(--primary-color);
-    color: var(--white);
-    padding: 8px 20px;
-    border-radius: 8px;
-    font-weight: 500;
-}
-
-.public-nav .nav-link-item.btn-login:hover {
-    background-color: var(--primary-dark);
-    color: var(--white); /* Garante que o texto permaneça branca no hover */
-}
-
-/* Botão de Dashboard para usuários logados */
-.public-nav .nav-link-item.btn-dashboard {
-    background-color: var(--accent-color); /* Uma cor diferente para o botão do dashboard */
-    color: var(--text-dark); /* Texto mais escuro para o amarelo */
-    padding: 8px 20px;
-    border-radius: 8px;
-    font-weight: 500;
-}
-
-.public-nav .nav-link-item.btn-dashboard:hover {
-    background-color: #e0ac00; /* Um tom mais escuro de amarelo no hover */
+.public-nav .nav-link {
     color: var(--text-dark);
+    font-weight: 500;
+    padding: 8px 0;
+    position: relative;
 }
 
-/* Efeito da Navbar ao rolar (scrolled) */
-body.scrolled .public-header-navbar-floating {
-    top: 0; /* Cola no topo */
-    width: 100%; /* Ocupa a largura total */
-    border-radius: 0; /* Remove bordas arredondadas */
-    box-shadow: 0 2px 8px rgba(60, 64, 67, 0.08); /* Sombra mais sutil */
-    padding: 10px 30px; /* Padding um pouco menor */
+.public-nav .nav-link:hover,
+.public-nav .nav-link.active {
+    color: var(--primary-color);
 }
 
-/* Hero Section (Jumbotron) */
-.hero-section {
+.public-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    left: 0;
+    bottom: 0;
+    transition: width 0.3s ease-in-out;
+}
+
+.public-nav .nav-link:hover::after,
+.public-nav .nav-link.active::after {
+    width: 100%;
+}
+
+/* Botões da Navbar (Entrar/Dashboard/Sair) */
+.public-nav .btn-login,
+.public-nav .btn-dashboard,
+.public-nav .btn-logout {
     background-color: var(--primary-color);
     color: var(--white);
-    text-align: center;
-    padding: 150px 30px 100px; /* Ajuste para dar espaço à navbar */
-    margin-bottom: 40px; /* Espaço abaixo do jumbotron */
-    border-radius: 12px; /* Bordas arredondadas para o jumbotron */
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Sombra suave */
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+    border: none; /* Remover borda padrão do btn */
+    cursor: pointer;
+    font-family: var(--font-family-sans); /* Garantir a mesma fonte */
+    font-size: 1rem; /* Tamanho da fonte */
 }
 
-.hero-section .container {
-    max-width: 900px;
+.public-nav .btn-login:hover,
+.public-nav .btn-dashboard:hover,
+.public-nav .btn-logout:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    color: var(--white); /* Garante que o texto permaneça branco no hover */
+}
+
+/* Hero Section - Jumbotron da Página Inicial */
+.hero-section {
+    /* Remova a background-color: var(--primary-color); se ainda estiver lá */
+    background-image: url('../images/banner_home_si-3.png'); /* Sua nova imagem */
+    background-size: cover; /* Garante que a imagem cubra toda a seção */
+    background-position: center; /* Centraliza a imagem */
+    background-repeat: no-repeat; /* Evita repetição da imagem */
+    position: relative; /* Essencial para o overlay */
+    padding: 150px 0 100px; /* Padding para cima e para baixo */
+    text-align: center;
+    color: var(--white); /* Garante que o texto dentro seja branco */
+}
+
+/* Overlay para garantir a legibilidade do texto sobre a imagem */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* Camada escura (preto com 50% de opacidade) */
+    z-index: 1; /* Coloca o overlay abaixo do conteúdo, mas acima da imagem */
+}
+
+/* Garante que o conteúdo (título, texto, botões) fique acima do overlay */
+.hero-section > * {
+    position: relative;
+    z-index: 2;
 }
 
 .hero-title {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    line-height: 1.2;
+    font-size: 3.2rem;
+    margin-bottom: 0.5em;
+    color: var(--white); /* Título branco no hero */
 }
 
 .hero-section .lead {
     font-size: 1.25rem;
-    margin-bottom: 30px;
-    opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto 30px;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .hero-buttons {
     display: flex;
     justify-content: center;
-    gap: 20px; /* Espaço entre os botões */
-    flex-wrap: wrap; /* Permite que os botões quebrem para a próxima linha em telas menores */
+    gap: 20px; /* Espaçamento entre os botões */
 }
 
-/* Botões Customizados */
-.btn-primary-custom {
-    background-color: var(--white);
-    color: var(--primary-color);
-    border: 2px solid var(--white);
-    padding: 10px 25px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.2s ease-in-out;
-}
-
-.btn-primary-custom:hover {
-    background-color: var(--primary-color);
-    color: var(--white);
-    border-color: var(--primary-dark);
-}
-
-.btn-secondary-custom {
-    background-color: transparent;
-    color: var(--white);
-    border: 2px solid var(--white);
-    padding: 10px 25px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.2s ease-in-out;
-}
-
-.btn-secondary-custom:hover {
-    background-color: var(--white);
-    color: var(--primary-color);
-}
-
-/* Botões Customizados Grandes (para o jumbotron) */
+/* Botões Customizados Grandes (para o hero section) */
 .btn-lg-custom {
     padding: 15px 30px;
     font-size: 1.15rem;
@@ -178,169 +194,200 @@ body.scrolled .public-header-navbar-floating {
     font-weight: 500;
 }
 
+/* --- Layout de Cartões na Área Pública --- */
 
-/* Wrapper para o conteúdo principal da área pública */
-.public-content-wrapper {
-    max-width: 1200px;
-    margin: 40px auto 40px auto; /* Ajusta margens para centralizar e dar espaço */
-    padding: 0 20px; /* Padding lateral */
+/* Wrapper principal para os grandes 'content-card' */
+.content-cards-wrapper {
+    display: flex; /* Habilita o Flexbox */
+    flex-direction: column; /* Os 'content-card' principais empilham verticalmente */
+    align-items: center; /* Centraliza os 'content-card' principais horizontalmente */
+    gap: 30px; /* Espaçamento entre os 'content-card' principais */
+    padding: 50px 20px; /* Padding interno para o wrapper */
+    max-width: 1200px; /* Limita a largura máxima do wrapper */
+    margin: 0 auto; /* Centraliza o wrapper na página */
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura */
 }
 
+/* Estilos para os cartões de conteúdo individuais (seções como "O que oferecemos?", "Nossa Missão", "Como Funciona") */
+.content-card {
+    background-color: var(--white); /* Cor de fundo definida em custom.css */
+    border-radius: var(--border-radius-large); /* Borda arredondada */
+    box-shadow: var(--shadow-medium); /* Sombra suave */
+    padding: 35px; /* Espaçamento interno um pouco maior */
+    text-align: center; /* Centraliza o texto e conteúdo dentro do cartão */
+    width: 100%; /* Ocupa a largura total disponível pelo wrapper */
+    max-width: 900px; /* Largura máxima para legibilidade em telas grandes */
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura */
+}
 
-/* Rodapé */
+/* Estilos para a grade de cartões menores (dentro de "O que o Sistema SI oferece?") */
+.content-card .card-grid {
+    display: flex; /* Habilita Flexbox para a grade de cartões menores */
+    flex-wrap: wrap; /* Permite que os cartões menores quebrem para a próxima linha */
+    justify-content: center; /* Centraliza os cartões menores na linha */
+    gap: 25px; /* Espaçamento entre os cartões menores */
+    margin-top: 30px; /* Espaçamento superior para separar do texto principal do card pai */
+    width: 100%; /* Garante que a grade ocupe a largura total do seu cartão pai */
+}
+
+/* Estilos para os cartões individuais dentro da grade (.content-card .card-grid) */
+.content-card.small-card {
+    /* flex-basis: Define a largura base do item antes de distribuir o espaço */
+    /* flex-grow: Permite que o item cresça para preencher espaço extra */
+    /* flex-shrink: Permite que o item encolha */
+    flex: 1 1 calc(33.333% - 25px); /* Tenta 3 cartões por linha, considerando o gap */
+    min-width: 280px; /* Largura mínima para o cartão não ficar muito pequeno */
+    max-width: 380px; /* Largura máxima para controle em telas muito grandes */
+    padding: 25px; /* Padding interno */
+    background-color: var(--light-grey); /* Fundo um pouco diferente para destaque */
+    border-radius: var(--border-radius-small);
+    box-shadow: var(--shadow-small); /* Sombra mais leve */
+    display: flex; /* Flexbox para alinhar conteúdo interno (ícone, título, etc.) */
+    flex-direction: column; /* Conteúdo interno empilha verticalmente */
+    align-items: center; /* Centraliza conteúdo interno */
+    text-align: center; /* Centraliza texto */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Transição para hover */
+}
+
+.content-card.small-card:hover {
+    transform: translateY(-5px); /* Leve efeito de "elevação" no hover */
+    box-shadow: var(--shadow-medium); /* Sombra um pouco mais forte no hover */
+}
+
+.content-card.small-card i {
+    font-size: 3rem; /* Tamanho do ícone */
+    color: var(--primary-color); /* Cor do ícone */
+    margin-bottom: 15px; /* Espaçamento abaixo do ícone */
+}
+
+.content-card.small-card h4 {
+    font-size: 1.2rem;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.content-card.small-card p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    flex-grow: 1; /* Permite que o parágrafo ocupe o espaço restante, útil para cartões com alturas variadas */
+}
+
+/* Estilos para o Rodapé da Área Pública */
 .main-footer {
     background-color: var(--dark-grey);
     color: var(--white);
     padding: 30px 0;
     text-align: center;
-    font-size: 0.9rem;
-    margin-top: auto; /* Adicionado para empurrar o rodapé para baixo */
+    font-size: 0.9em;
+    margin-top: 50px; /* Espaço antes do rodapé */
 }
 
 .main-footer .footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-/* Wrapper para os cartões de conteúdo (seções) */
-.content-cards-wrapper {
     display: flex;
-    flex-direction: column; /* Padrão em coluna para mobile primeiro */
-    gap: 30px; /* Espaçamento entre os cartões wrapper */
-    margin-bottom: 40px;
+    justify-content: center;
+    align-items: center;
+    min-height: 40px; /* Altura mínima para o conteúdo do rodapé */
 }
 
-/* Cartões de Conteúdo (que podem ser usados em várias seções) */
-.content-card {
-    background-color: var(--white);
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px var(--shadow-light); /* Sombra para o efeito de flutuar */
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-
-.content-card:hover.hover-effect-card {
-    transform: translateY(-5px); /* Efeito de elevação no hover */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada no hover */
-}
-
-.content-card h2, .content-card h3 {
-    color: var(--primary-dark);
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.content-card p {
-    color: var(--text-light);
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-.content-card .btn {
-    background-color: var(--primary-color);
-    color: var(--white);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background-color 0.2s ease-in-out;
-}
-
-.content-card .btn:hover {
-    background-color: var(--primary-dark);
-}
-
-/* Estilos para botões de informação (se existirem, exemplo) */
-.content-card .btn-info {
-    background-color: var(--medium-grey);
-    color: var(--white);
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background-color 0.2s ease-in-out;
-}
-.content-card .btn-info:hover {
-    background-color: #5a6268;
-}
-
-/* Seções de conteúdo geral, para manter o espaçamento */
-.public-section {
-    margin-bottom: 40px; /* Espaço entre seções */
-    padding: 0 15px; /* Manter padding lateral do container */
-}
-
-/* Medias queries para responsividade - ajuste do padding do body e do jumbotron */
-@media (max-width: 768px) {
-    body {
-        padding-top: 90px; /* AJUSTADO: Empurra o conteúdo para baixo em telas menores. */
-    }
+/* Media Queries para Responsividade da Área Pública */
+@media (max-width: 992px) { /* Tablet e mobile */
     .public-header-navbar-floating {
-        top: 10px;
-        width: calc(100% - 20px); /* Margens menores em mobile */
-        padding: 10px 15px;
+        padding: 12px 20px;
+        width: calc(100% - 20px); /* Ajuste de largura em telas menores */
     }
-    body.scrolled .public-header-navbar-floating {
-        padding: 8px 15px;
+    .public-header-navbar-floating.scrolled {
+        padding: 8px 20px;
     }
-    .public-header-navbar-floating .logo-text-si {
+    .public-header-navbar-floating .brasao-logo {
+        height: 35px;
+    }
+    .public-header-navbar-floating.scrolled .brasao-logo {
+        height: 25px;
+    }
+    .public-header-navbar-floating .navbar-brand-logo {
         font-size: 1.4rem;
     }
     .public-nav .public-nav-list {
-        gap: 10px; /* Reduz o espaçamento entre os links em mobile */
-    }
-    .public-nav .nav-link-item {
-        font-size: 0.95rem;
-        padding: 6px 10px;
+        gap: 15px; /* Reduz espaçamento entre links */
     }
     .hero-section {
-        /* REMOVIDO: margin-top: 90px; - O padding-top do body agora cuida disso. */
-        padding: 100px 20px 60px; /* Padding menor em mobile */
-        margin-bottom: 30px;
+        padding: 120px 0 80px;
     }
     .hero-title {
-        font-size: 2.2rem; /* Título menor em mobile */
+        font-size: 2.5rem;
     }
-    .hero-buttons .btn {
+    .hero-section .lead {
+        font-size: 1.1rem;
+    }
+    .hero-buttons {
+        flex-direction: column; /* Botões empilham em mobile */
+        gap: 15px;
+    }
+    .btn-lg-custom {
         width: 100%; /* Botões do hero ocupam largura total em mobile */
-        margin-bottom: 10px; /* Espaçamento entre botões empilhados */
     }
-    .hero-buttons .btn:last-child {
-        margin-bottom: 0;
-    }
+    /* Adaptação dos content-cards-wrapper e card-grid para tablets */
     .content-cards-wrapper {
-        flex-direction: column; /* Cartões empilham em mobile */
-        gap: 20px; /* Espaçamento entre os cartões wrapper em mobile */
-        padding: 0 10px; /* Reduz padding lateral */
+        padding: 0 15px; /* Ajusta padding lateral */
+        gap: 25px; /* Ajusta espaçamento entre os grandes cartões */
     }
-    .card-grid {
-        grid-template-columns: 1fr; /* Garante uma coluna em mobile */
-        gap: 15px; /* Reduz espaçamento na grade em mobile */
+    .content-card .card-grid {
+        gap: 20px; /* Ajusta o gap entre cartões menores */
     }
-    .main-footer {
-        padding: 20px 15px; /* Ajusta padding do rodapé */
+    .content-card.small-card {
+        flex: 1 1 calc(50% - 20px); /* Tenta 2 cartões por linha */
     }
 }
 
-@media (min-width: 769px) {
-    .hero-section {
-        padding: 180px 40px 120px; /* Padding maior em desktop */
+@media (max-width: 768px) { /* Mobile específico */
+    body {
+        padding-top: 80px; /* Mais ajuste para navbar em telas menores */
+    }
+    .public-header-navbar-floating {
+        top: 10px;
+        padding: 8px 15px;
+    }
+    .public-header-navbar-floating.scrolled {
+        padding: 6px 15px;
+    }
+    /* Opcional: esconder itens da navbar e usar um menu hambúrguer */
+    .public-nav {
+        display: none; /* Esconder a nav padrão para usar um toggle */
+    }
+    /* (Você precisaria de JavaScript e HTML para implementar um menu hambúrguer) */
+    .public-header-navbar-floating .navbar-brand-logo {
+        width: 100%; /* Ocupa a largura total para centralizar se não houver nav */
+        justify-content: center;
     }
     .hero-title {
-        font-size: 3.5rem; /* Título maior em desktop */
+        font-size: 2rem;
     }
+    .hero-section .lead {
+        font-size: 1rem;
+    }
+    .content-card {
+        padding: 20px;
+    }
+    /* Adaptação dos content-cards-wrapper e card-grid para mobile */
     .content-cards-wrapper {
-        flex-direction: row; /* Volta para linha em desktop */
-        flex-wrap: wrap; /* Permite que os cartões quebrem */
-        justify-content: space-between; /* Espaço entre os cartões */
+        padding: 0 10px; /* Reduz padding lateral */
+        gap: 20px; /* Ajusta espaçamento entre os grandes cartões */
     }
-    .content-cards-wrapper .content-card {
-        flex: 1; /* Permite que os cartões cresçam */
-        min-width: 300px; /* Largura mínima para evitar que fiquem muito pequenos */
-        max-width: calc(50% - 15px); /* Dois cartões por linha com gap */
+    .content-card .card-grid {
+        flex-direction: column; /* Empilha os cartões menores em coluna */
+        gap: 15px; /* Espaçamento entre cartões empilhados */
     }
-    .card-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Grid responsivo para múltiplos cartões */
+    .content-card.small-card {
+        width: 100%; /* Ocupa a largura total em mobile */
+        max-width: none; /* Remove a largura máxima */
+        flex: 1 1 auto; /* Ajusta para se comportar como item de coluna */
+        padding: 20px;
+    }
+    .content-card.small-card i {
+        font-size: 2.5rem; /* Ajusta tamanho do ícone */
+    }
+    .content-card.small-card h4 {
+        font-size: 1.1rem;
     }
 }

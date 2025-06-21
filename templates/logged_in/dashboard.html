@@ -1,27 +1,35 @@
 {# templates/logged_in/dashboard.html #}
 {% extends 'logged_in/base_logged_in.html' %}
+{% load static %}
 
 {% block title %}Dashboard - Sistema SI{% endblock %}
 
-{% block logged_in_content %}
-    <div class="dashboard-content">
-        <h1 class="page-header-title">Dashboard</h1>
-        
-        <div class="card-grid">
-            <div class="dashboard-card">
-                <h3>Informações do Perfil</h3>
-                <p>Visualize e edite seus dados pessoais.</p>
-                <a href="#" class="btn btn-primary-custom">Meu Perfil</a>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>Informações do Perfil</h3>
-                <p>Visualize e edite seus dados pessoais.</p>
-                <a href="#" class="btn btn-primary-custom">Meu Perfil</a>
-            </div>
-
-            {# Você pode adicionar mais cartões ou módulos aqui #}
-        </div>
-
+{% block dashboard_content %}
+    <div class="page-header">
+        <h1 class="page-header-title">Bem-vindo ao Dashboard, {{ user.username }}!</h1>
+        <p>Aqui você encontra as principais informações e ferramentas do sistema.</p>
     </div>
-{% endblock %}
+
+    <div class="card-grid">
+        <div class="dashboard-card">
+            <h3>Visão Geral</h3>
+            <p>Acompanhe métricas e dados importantes.</p>
+            <a href="#" class="btn btn-primary-custom">Ver Detalhes</a>
+        </div>
+        <div class="dashboard-card">
+            <h3>Relatórios</h3>
+            <p>Gere relatórios personalizados para suas necessidades.</p>
+            <a href="#" class="btn btn-primary-custom">Gerar Relatórios</a>
+        </div>
+        <div class="dashboard-card">
+            <h3>Eventos Recentes</h3>
+            <p>Fique por dentro dos últimos acontecimentos.</p>
+            <a href="#" class="btn btn-primary-custom">Ver Eventos</a>
+        </div>
+        <div class="dashboard-card">
+            <h3>Minhas Tarefas</h3>
+            <p>Gerencie suas tarefas e prazos.</p>
+            <a href="#" class="btn btn-primary-custom">Ver Tarefas</a>
+        </div>
+    </div>
+{% endblock dashboard_content %}
