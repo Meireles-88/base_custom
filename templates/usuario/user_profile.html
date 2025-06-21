@@ -1,0 +1,19 @@
+{# templates/usuario/user_profile.html #}
+{% extends 'logged_in/base_logged_in.html' %}
+{% load static %}
+
+{% block title %}{{ profile.user.username }} - Perfil - Sistema SI{% endblock %}
+
+{% block dashboard_content %}
+    <div>
+        <h2 class="page-header-title">Perfil de {{ profile.user.username }}</h2>
+        <div class="user-profile-card">
+            <img src="{% static 'images/avatar_meireles.jpeg' %}" alt="Avatar de {{ profile.user.username }}" class="profile-image">
+            <div class="profile-detail"><span>Usuário:</span> {{ profile.user.username }}</div>
+            <div class="profile-detail"><span>Cargo:</span> {{ profile.cargo|default:"Sem cargo" }}</div>
+            <div class="profile-detail"><span>Instituição:</span> {{ profile.instituicao|default:"Sem instituição" }}</div>
+            <div class="profile-detail"><span>Data de Criação:</span> {{ profile.data_criacao|date:"d/m/Y H:i" }}</div>
+            <div class="profile-detail"><span>Status:</span> {% if profile.ativo %}Ativo{% else %}Inativo{% endif %}</div>
+        </div>
+    </div>
+{% endblock %}

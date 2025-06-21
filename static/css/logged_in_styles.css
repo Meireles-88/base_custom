@@ -660,3 +660,83 @@ body.sidebar-minimized-desktop .sidebar-header .system-logo .system-emblem {
 body.sidebar-minimized-desktop .sidebar .sidebar-menu-item a i {
     margin-right: 17.5px; /* Garante que os ícones do menu não tenham margem extra */
 }
+
+
+/* ############################################################################## */
+/* Adições para o módulo usuario - Novos estilos sem modificar classes existentes */
+/* ############################################################################## */
+.user-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.user-list-table th,
+.user-list-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.user-list-table th {
+    background-color: var(--secondary-color);
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.user-list-table tr:hover {
+    background-color: var(--light-grey);
+}
+
+.user-profile-card {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px var(--shadow-light);
+    padding: 20px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-profile-card .profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.user-profile-card .profile-detail {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.user-profile-card .profile-detail span {
+    font-weight: 500;
+    color: var(--primary-dark);
+}
+
+/* Media Queries para responsividade sem alterar classes existentes */
+@media (max-width: 768px) {
+    .user-list-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .user-list-table th,
+    .user-list-table td {
+        min-width: 150px;
+    }
+
+    .user-profile-card {
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    .user-profile-card .profile-image {
+        width: 80px;
+        height: 80px;
+    }
+}

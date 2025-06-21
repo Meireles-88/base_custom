@@ -48,7 +48,7 @@
                     </a>
                 </li>
                 <li class="sidebar-menu-item">
-                    <a href="#" aria-label="Usuários">
+                    <a href="{% url 'usuario:user_list' %}" class="{% if request.resolver_match.url_name == 'user_list' %}active{% endif %}" aria-current="{% if request.resolver_match.url_name == 'user_list' %}page{% else %}false{% endif %}">
                         <i class="bi bi-people"></i> {# Ícone para Usuários #}
                         <span>Usuários</span>
                     </a>
@@ -71,18 +71,17 @@
         {# Top Navbar #}
         <header class="top-navbar">
             <div class="top-navbar-left">
-                {# Botão de toggle para abrir/fechar a sidebar (AGORA SEMPRE HAMBÚRGUER) #}
                 <button class="toggle-sidebar-btn" aria-expanded="false" aria-controls="sidebar-navigation">
-                    <i class="bi bi-list"></i> {# Ícone sempre 'list' (hambúrguer) #}
+                    <i class="bi bi-list"></i>
                 </button>
-                <span class="current-page-title">Dashboard</span> {# Este texto pode ser dinâmico via JS ou context #}
+                <span class="current-page-title">{{ current_page_title }}</span>
             </div>
             <div class="user-profile-widget">
-                <img src="{% static 'images/avatar_meireles.jpeg' %}" alt="Avatar do Usuário" class="user-avatar-top"> {# Substitua pela imagem real do avatar #}
+                <img src="{% static 'images/avatar_meireles.jpeg' %}" alt="Avatar do Usuário" class="user-avatar-top">
                 <span class="user-name-top">{{ user.username }}</span>
                 <form action="{% url 'autenticacao:logout' %}" method="post" style="display: inline;">
                     {% csrf_token %}
-                    <button type="submit" class="logout-link ">Sair</button>
+                    <button type="submit" class="logout-link">Sair</button>
                 </form>
             </div>
         </header>
@@ -100,7 +99,7 @@
 
         {# Rodapé do Dashboard #}
         <footer class="dashboard-footer">
-            <p>&copy; 2025 Sistema SI - Todos os direitos reservados.</p>
+            <p>© 2025 Sistema SI - Todos os direitos reservados.</p>
         </footer>
     </div>
 {% endblock content %}

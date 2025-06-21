@@ -10,6 +10,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('painel.urls')),
     path('autenticacao/', include('autenticacao.urls')),
+    path('usuario/', include('usuario.urls')),
 ]
 
 if settings.DEBUG:

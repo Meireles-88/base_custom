@@ -1,0 +1,39 @@
+{# templates/usuario/user_list.html #}
+{% extends 'logged_in/base_logged_in.html' %}
+{% load static %}
+
+{% block title %}Lista de Usuários - Sistema SI{% endblock %}
+
+{% block dashboard_content %}
+    <div>
+        <h2 class="page-header-title">Lista de Usuários</h2>
+        <div class="user-profile-card">
+            <table class="user-list-table">
+                <thead>
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Cargo</th>
+                        <th>Instituição</th>
+                        <th>Data de Criação</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for profile in profiles %}
+                        <tr>
+                            <td>{{ profile.user.username }}</td>
+                            <td>{{ profile.cargo|default:"Sem cargo" }}</td>
+                            <td>{{ profile.instituicao|default:"Sem instituição" }}</td>
+                            <td>{{ profile.data_criacao|date:"d/m/Y H:i" }}</td>
+                            <td>{% if profile.ativo %}Ativo{% else %}Inativo{% endif %}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">Nenhum perfil de usuário encontrado.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
