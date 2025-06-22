@@ -75,6 +75,8 @@
                     <i class="bi bi-list"></i>
                 </button>
                 <span class="current-page-title">{{ current_page_title }}</span>
+                <!-- Em base_logged_in.html, linha 78 -->
+                <span class="current-page-title">{{ current_page_title|default:"Dashboard" }}
             </div>
             <div class="user-profile-widget">
                 <img src="{% static 'images/avatar_meireles.jpeg' %}" alt="Avatar do Usuário" class="user-avatar-top">
