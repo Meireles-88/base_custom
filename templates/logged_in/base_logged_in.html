@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap-icons.css' %}">
 {% endblock %}
 
+
+
 {% block body_attributes %}
     {# A classe 'sidebar-minimized-desktop' ou 'sidebar-expanded-desktop' será adicionada aqui pelo JS #}
     {# E 'sidebar-open-mobile' / 'sidebar-closed-mobile' para mobile #}
@@ -74,9 +76,19 @@
                 <button class="toggle-sidebar-btn" aria-expanded="false" aria-controls="sidebar-navigation">
                     <i class="bi bi-list"></i>
                 </button>
-                <span class="current-page-title">{{ current_page_title }}</span>
-                <!-- Em base_logged_in.html, linha 78 -->
-                <span class="current-page-title">{{ current_page_title|default:"Dashboard" }}
+                <!-- Em base_logged_in.html, linhas 84-96 -->
+                {% if breadcrumb and breadcrumb|length > 1 %}
+                    {% for item in breadcrumb|slice:":1" %}
+                        <a href="{{ item.url }}" class="breadcrumb-link">{{ item.title }}</a> <span class="breadcrumb-separator">›</span>
+                    {% endfor %}
+                    {% for item in breadcrumb|slice:"1:" %}
+                        <a href="{{ item.url }}" class="breadcrumb-link">{{ item.title }}</a> {% if not forloop.last %}<span class="breadcrumb-separator">›</span>{% endif %}
+                    {% empty %}
+                        <span class="current-page-title">Dashboard</span>
+                    {% endfor %}
+                {% else %}
+                    <span class="current-page-title">Dashboard</span>
+                {% endif %}
             </div>
             <div class="user-profile-widget">
                 <img src="{% static 'images/avatar_meireles.jpeg' %}" alt="Avatar do Usuário" class="user-avatar-top">

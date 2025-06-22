@@ -1,0 +1,36 @@
+{# templates/usuario/user_edit.html #}
+{% extends 'logged_in/base_logged_in.html' %}
+{% load static %}
+
+{% block title %}{{ profile.user.username }} - Editar Perfil - Sistema SI{% endblock %}
+
+{% block dashboard_content %}
+    <div>
+        <h2 class="page-header-title">Editar Perfil de {{ profile.user.username }}</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="user-profile-card">
+            <form method="post">
+                {% csrf_token %}
+                <div class="profile-detail">
+                    <span>Cargo:</span>
+                    <input type="text" name="cargo" value="{{ profile.cargo|default:'' }}" class="form-control" required>
+                </div>
+                <div class="profile-detail">
+                    <span>Instituição:</span>
+                    <input type="text" name="instituicao" value="{{ profile.instituicao|default:'' }}" class="form-control" required>
+                </div>
+                <div class="profile-detail">
+                    <span>Status:</span>
+                    <label><input type="checkbox" name="ativo" {% if profile.ativo %}checked{% endif %}> Ativo</label>
+                </div>
+                <button type="submit" class="btn btn-primary-custom">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

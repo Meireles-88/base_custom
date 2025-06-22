@@ -1,0 +1,17 @@
+{# templates/usuario/user_delete.html #}
+{% extends 'logged_in/base_logged_in.html' %}
+{% load static %}
+
+{% block title %}Excluir Perfil - Sistema SI{% endblock %}
+
+{% block dashboard_content %}
+    <div>
+        <h2 class="page-header-title">Excluir Perfil de {{ profile.user.username }}</h2>
+        <p>Tem certeza que deseja excluir o perfil e o usuário?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-delete">Confirmar Exclusão</button>
+            <a href="{% url 'usuario:user_list' %}" class="btn btn-secondary-custom">Cancelar</a>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{# templates/usuario/user_create.html #}
+{% extends 'logged_in/base_logged_in.html' %}
+{% load static %}
+
+{% block title %}Criar Perfil - Sistema SI{% endblock %}
+
+{% block dashboard_content %}
+    <div>
+        <h2 class="page-header-title">Criar Novo Perfil</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="user-profile-card">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-create">Criar Perfil</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

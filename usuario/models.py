@@ -2,6 +2,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class UserProfile(models.Model):
     """
@@ -23,6 +25,42 @@ class UserProfile(models.Model):
         blank=True,
         null=True
     )
+    cidade_uf = models.CharField(
+        max_length=100,
+        verbose_name=_("Cidade - UF"),
+        help_text=_("Exemplo: Guaira - SP"),
+        blank=True,
+        null=True
+    )
+    email = models.EmailField(
+        verbose_name=_("E-mail"),
+        blank=True,
+        null=True
+    )
+    cpf = models.CharField(
+        max_length=14,  # Considerando formato com máscara (ex.: 123.456.789-00)
+        verbose_name=_("CPF"),
+        blank=True,
+        null=True
+    )
+    celular = models.CharField(
+        max_length=15,  # Considerando formato com máscara (ex.: (11) 98765-4321)
+        verbose_name=_("Celular"),
+        blank=True,
+        null=True
+    )
+    fone = models.CharField(
+        max_length=14,  # Considerando formato com máscara (ex.: (11) 1234-5678)
+        verbose_name=_("Telefone"),
+        blank=True,
+        null=True
+    )
+    foto = models.ImageField(
+        upload_to='profile_photos/',
+        verbose_name=_("Foto do Usuário"),
+        blank=True,
+        null=True
+    )
     data_criacao = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_("Data de Criação")
@@ -36,13 +74,22 @@ class UserProfile(models.Model):
         verbose_name = _("Perfil de Usuário")
         verbose_name_plural = _("Perfis de Usuários")
         ordering = ['user__username']
+        permissions = [
+            ('can_add_userprofile', 'Can add user profile'),
+            ('can_change_userprofile', 'Can change user profile'),
+            ('can_delete_userprofile', 'Can delete user profile'),
+        ]
 
     def __str__(self):
         return f"{self.user.username} - {self.cargo or 'Sem cargo'}"
 
-    def save(self, *args, **kwargs):
-        # Garante que o perfil seja criado automaticamente ao criar um usuário
-        if not self.pk and not UserProfile.objects.filter(user=self.user).exists():
-            super().save(*args, **kwargs)
-        else:
-            super().save(*args, **kwargs)
+@receiver(post_save, sender=User)
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    """
+    Sinal para criar ou atualizar automaticamente o UserProfile ao salvar um User.
+    """
+    if created:
+        UserProfile.objects.create(user=instance)
+    else:
+        # Atualiza o perfil existente, se houver
+        instance.userprofile.save()

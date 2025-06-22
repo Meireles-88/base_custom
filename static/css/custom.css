@@ -31,7 +31,7 @@ html, body {
     font-family: var(--font-family-sans);
     color: var(--text-dark);
     line-height: 1.6;
-    background-color: var(--light-grey); /* Fundo geral do site */
+    background-color: var(--secondary-color); /* Fundo geral do site */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -114,6 +114,59 @@ a:hover {
 }
 .btn-info-custom:hover {
     background-color: #5a6268;
+}
+
+/* Botões CRUD Globais */
+.btn-create {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+.btn-create:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: var(--white);
+}
+
+.btn-read {
+    background-color: #6c757d;
+    color: var(--white);
+    border: none;
+}
+.btn-read:hover {
+    background-color: #5a6268;
+}
+
+.btn-update {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+.btn-update:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: var(--white);
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: var(--white);
+    border-color: #dc3545;
+}
+.btn-delete:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+    color: var(--white);
+}
+.btn-update {
+    background-color: var(--primary-color); /* #1A73E8 */
+    color: var(--white);
+    border: 1px solid var(--primary-dark); /* Borda para distinção */
+    border-color: var(--primary-color);
+}
+.btn-update:hover {
+    background-color: var(--primary-dark); /* #1558B5 */
+    border-color: var(--primary-dark);
 }
 
 /* Estilos para cards de conteúdo genéricos */

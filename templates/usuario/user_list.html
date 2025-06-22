@@ -2,13 +2,28 @@
 {% extends 'logged_in/base_logged_in.html' %}
 {% load static %}
 
-{% block title %}Lista de Usuários - Sistema SI{% endblock %}
+{% block title %}Lista de Usuários - SI{% endblock %}
 
 {% block dashboard_content %}
     <div>
-        <h2 class="page-header-title">Lista de Usuários</h2>
         <div class="user-profile-card">
-            <table class="user-list-table">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 10px;">
+                {# Ajuste o título pra ficar alinhado à esquerda #}
+                <h2 class="page-header-title">Lista de Usuários</h2>
+                {# Agrupar Adicionar Usuário e filtro à direita #}
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a href="{% url 'usuario:user_create' %}" class="btn btn-create"><i class="bi bi-plus"></i> Adicionar Usuário</a>
+                    <select id="status-filter" style="margin-right: 10px;">
+                        <option value="all">Todos</option>
+                        <option value="ativo">Ativos</option>
+                        <option value="inativo">Inativos</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-profile-card">
+            <table class="user-list-table responsive-table">
                 <thead>
                     <tr>
                         <th>Usuário</th>
@@ -16,20 +31,26 @@
                         <th>Instituição</th>
                         <th>Data de Criação</th>
                         <th>Status</th>
+                        <th>Ações</th> {# Nova coluna para ações #}
                     </tr>
                 </thead>
                 <tbody>
-                    {% for profile in profiles %}
-                        <tr>
+                    {% for profile in profiles.values %}
+                        <tr class="user-row" data-username="{{ profile.user.username|lower }}" data-status="{% if profile.ativo %}ativo{% else %}inativo{% endif %}">
                             <td>{{ profile.user.username }}</td>
                             <td>{{ profile.cargo|default:"Sem cargo" }}</td>
                             <td>{{ profile.instituicao|default:"Sem instituição" }}</td>
                             <td>{{ profile.data_criacao|date:"d/m/Y H:i" }}</td>
                             <td>{% if profile.ativo %}Ativo{% else %}Inativo{% endif %}</td>
+                            <td>
+                                <a href="{% url 'usuario:user_profile' profile.pk %}" class="btn btn-read btn-sm"><i class="bi bi-eye"></i></a>
+                                <a href="{% url 'usuario:user_edit' profile.pk %}" class="btn btn-update btn-sm"><i class="bi bi-pencil"></i></a>
+                                <a href="{% url 'usuario:user_delete' profile.pk %}" class="btn btn-delete btn-sm" onclick="return confirm('Tem certeza?')"><i class="bi bi-trash"></i></a>
+                            </td>
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="5">Nenhum perfil de usuário encontrado.</td>
+                            <td colspan="6">Nenhum perfil de usuário encontrado.</td>
                         </tr>
                     {% endfor %}
                 </tbody>

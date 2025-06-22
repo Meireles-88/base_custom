@@ -8,10 +8,15 @@
     <div>
         <h2 class="page-header-title">Perfil de {{ profile.user.username }}</h2>
         <div class="user-profile-card">
-            <img src="{% static 'images/avatar_meireles.jpeg' %}" alt="Avatar de {{ profile.user.username }}" class="profile-image">
+            <img src="{% if profile.foto %}{{ profile.foto.url }}{% else %}{% static 'images/avatar_meireles.jpeg' %}{% endif %}" alt="Avatar de {{ profile.user.username }}" class="profile-image">
             <div class="profile-detail"><span>Usuário:</span> {{ profile.user.username }}</div>
             <div class="profile-detail"><span>Cargo:</span> {{ profile.cargo|default:"Sem cargo" }}</div>
             <div class="profile-detail"><span>Instituição:</span> {{ profile.instituicao|default:"Sem instituição" }}</div>
+            <div class="profile-detail"><span>Cidade - UF:</span> {{ profile.cidade_uf|default:"Não informada" }}</div>
+            <div class="profile-detail"><span>E-mail:</span> {{ profile.email|default:"Não informado" }}</div>
+            <div class="profile-detail"><span>CPF:</span> {{ profile.cpf|default:"Não informado" }}</div>
+            <div class="profile-detail"><span>Celular:</span> {{ profile.celular|default:"Não informado" }}</div>
+            <div class="profile-detail"><span>Telefone:</span> {{ profile.fone|default:"Não informado" }}</div>
             <div class="profile-detail"><span>Data de Criação:</span> {{ profile.data_criacao|date:"d/m/Y H:i" }}</div>
             <div class="profile-detail"><span>Status:</span> {% if profile.ativo %}Ativo{% else %}Inativo{% endif %}</div>
         </div>

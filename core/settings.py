@@ -58,7 +58,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'usuario.context_processors.set_page_title',
+                'usuario.context_processors.set_breadcrumb',
             ],
         },
     },
@@ -136,3 +136,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'autenticacao:login'
 LOGIN_REDIRECT_URL = 'painel:dashboard'
 LOGOUT_REDIRECT_URL = 'painel:home'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+
