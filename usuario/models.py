@@ -83,13 +83,17 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.cargo or 'Sem cargo'}"
 
+# --- INÍCIO DA MODIFICAÇÃO ---
+
 @receiver(post_save, sender=User)
-def create_or_update_user_profile(sender, instance, created, **kwargs):
+def create_or_update_user_profile(sender, instance, **kwargs):
     """
-    Sinal para criar ou atualizar automaticamente o UserProfile ao salvar um User.
+    Este sinal garante que um UserProfile seja criado para cada User, caso não exista.
+    Ele usa get_or_create para evitar o erro 'RelatedObjectDoesNotExist'.
     """
-    if created:
-        UserProfile.objects.create(user=instance)
-    else:
-        # Atualiza o perfil existente, se houver
-        instance.userprofile.save()
+    # A linha abaixo tenta obter o perfil do usuário. Se não existir, ela o cria.
+    # Isso resolve o problema para usuários novos e para usuários antigos (como o admin)
+    # que foram criados antes do sistema de perfis.
+    UserProfile.objects.get_or_create(user=instance)
+
+# --- FIM DA MODIFICAÇÃO ---
