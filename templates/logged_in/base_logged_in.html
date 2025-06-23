@@ -55,6 +55,12 @@
                     </a>
                 </li>
                 <li class="sidebar-menu-item">
+                    <a href="{% url 'instituicao:lista_instituicoes' %}" class="{% if 'instituicao:' in request.resolver_match.view_name %}active{% endif %}">
+                        <i class="bi bi-building"></i> {# Ícone de "prédio" para instituições #}
+                        <span>Instituições</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
                     <a href="#" aria-label="Relatórios">
                         <i class="bi bi-file-earmark-text"></i> {# Ícone para Relatórios #}
                         <span>Relatórios</span>

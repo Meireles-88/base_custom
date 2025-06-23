@@ -11,6 +11,7 @@ urlpatterns = [
     path('', include('painel.urls')),
     path('autenticacao/', include('autenticacao.urls')),
     path('usuario/', include('usuario.urls')),
+    path('instituicoes/', include('instituicao.urls')),
 ]
 
 if settings.DEBUG:

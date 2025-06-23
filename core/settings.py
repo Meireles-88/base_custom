@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'painel',
     'autenticacao',
     'usuario',
+    'instituicao',
 ]
 
 MIDDLEWARE = [
