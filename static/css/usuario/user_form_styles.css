@@ -1,0 +1,55 @@
+/* Estilos para formulários da app Usuário */
+.form-page-container .form-card {
+    padding: 25px 30px;
+}
+
+.form-page-container .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Duas colunas */
+    gap: 25px; /* Espaço entre os campos */
+}
+
+.form-page-container .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Ocupa as duas colunas quando necessário */
+.form-page-container .form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-page-container .form-group label {
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.form-page-container .form-group .form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.form-page-container .form-group-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-page-container .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+@media (max-width: 768px) {
+    .form-page-container .form-grid {
+        grid-template-columns: 1fr;
+    }
+}

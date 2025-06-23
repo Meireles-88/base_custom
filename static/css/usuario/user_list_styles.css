@@ -1,0 +1,94 @@
+/* Estilos para a página de Lista de Usuários */
+
+.list-page-container .list-card {
+    padding: 0; /* Remove padding do content-card para controle interno */
+}
+
+.list-page-container .list-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.list-page-container .header-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--primary-dark);
+}
+
+.list-page-container .header-title-group i {
+    font-size: 1.5rem;
+}
+
+.list-page-container .header-title-group h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: var(--text-dark);
+}
+
+.list-page-container .header-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.list-page-container .form-select-custom {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background-color: var(--white);
+    color: var(--text-dark);
+    height: 40px; /* Alinha com a altura do botão */
+}
+
+.list-page-container .list-card-body {
+    padding: 25px;
+}
+
+.list-page-container .table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.list-page-container .user-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px; /* Garante que a tabela não fique espremida */
+}
+
+.list-page-container .user-list-table th,
+.list-page-container .user-list-table td {
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.list-page-container .user-list-table thead th {
+    background-color: var(--secondary-color);
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+}
+
+.list-page-container .user-list-table tbody tr:hover {
+    background-color: var(--light-grey);
+}
+
+.list-page-container .actions-cell {
+    display: flex;
+    gap: 8px;
+}
+
+.list-page-container .btn-action {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+}

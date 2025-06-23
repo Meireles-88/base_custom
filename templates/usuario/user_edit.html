@@ -2,35 +2,91 @@
 {% extends 'logged_in/base_logged_in.html' %}
 {% load static %}
 
-{% block title %}{{ profile.user.username }} - Editar Perfil - Sistema SI{% endblock %}
+{% block title %}Editar Perfil de {{ profile.user.username }}{% endblock %}
+
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/usuario/user_form_styles.css' %}">
+{% endblock %}
 
 {% block dashboard_content %}
-    <div>
+<div class="form-page-container">
+    <div class="page-header">
         <h2 class="page-header-title">Editar Perfil de {{ profile.user.username }}</h2>
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-success" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-        <div class="user-profile-card">
-            <form method="post">
-                {% csrf_token %}
-                <div class="profile-detail">
-                    <span>Cargo:</span>
-                    <input type="text" name="cargo" value="{{ profile.cargo|default:'' }}" class="form-control" required>
-                </div>
-                <div class="profile-detail">
-                    <span>Instituição:</span>
-                    <input type="text" name="instituicao" value="{{ profile.instituicao|default:'' }}" class="form-control" required>
-                </div>
-                <div class="profile-detail">
-                    <span>Status:</span>
-                    <label><input type="checkbox" name="ativo" {% if profile.ativo %}checked{% endif %}> Ativo</label>
-                </div>
-                <button type="submit" class="btn btn-primary-custom">Salvar Alterações</button>
-            </form>
-        </div>
     </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="content-card form-card">
+        {# ATENÇÃO: enctype é essencial para upload de arquivos #}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-grid">
+                {# Renderizando campo por campo para ter controle total do layout #}
+                <div class="form-group">
+                    <label for="{{ form.first_name.id_for_label }}">Nome:</label>
+                    {{ form.first_name }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.last_name.id_for_label }}">Sobrenome:</label>
+                    {{ form.last_name }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">E-mail:</label>
+                    {{ form.email }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.cargo.id_for_label }}">Cargo:</label>
+                    {{ form.cargo }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.instituicao.id_for_label }}">Instituição:</label>
+                    {{ form.instituicao }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.cpf.id_for_label }}">CPF:</label>
+                    {{ form.cpf }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.celular.id_for_label }}">Celular:</label>
+                    {{ form.celular }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.fone.id_for_label }}">Telefone Fixo:</label>
+                    {{ form.fone }}
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="{{ form.foto.id_for_label }}">Foto do Perfil:</label>
+                    {{ form.foto }}
+                    {% if profile.foto %}
+                        <small>Foto atual: <a href="{{ profile.foto.url }}" target="_blank">{{ profile.foto.name }}</a></small>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group-check full-width">
+                    {{ form.ativo }}
+                    <label for="{{ form.ativo.id_for_label }}">Usuário Ativo</label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'usuario:user_profile' profile.pk %}" class="btn btn-secondary-custom">Cancelar</a>
+                <button type="submit" class="btn btn-primary-custom">Salvar Alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

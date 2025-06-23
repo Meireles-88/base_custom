@@ -19,7 +19,9 @@
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     
     {# Bloco para CSS e meta tags adicionais por página/área #}
-    {% block extra_head %}{% endblock %}
+    {% block extra_head %}
+        {# Exemplo de link para CSS específico de uma página #}
+    {% endblock %}
 </head>
 <body>
     {# Conteúdo principal será injetado aqui #}

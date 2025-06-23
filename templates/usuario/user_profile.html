@@ -4,21 +4,89 @@
 
 {% block title %}{{ profile.user.username }} - Perfil - Sistema SI{% endblock %}
 
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/usuario/user_profile_styles.css' %}">
+{% endblock %}
+
 {% block dashboard_content %}
-    <div>
-        <h2 class="page-header-title">Perfil de {{ profile.user.username }}</h2>
+    {# Container com classe única para "isolar" os estilos desta página #}
+    <div class="profile-page-container">
+        <div class="page-header">
+            <h2 class="page-header-title">Perfil de Usuário</h2>
+        </div>
+
         <div class="user-profile-card">
-            <img src="{% if profile.foto %}{{ profile.foto.url }}{% else %}{% static 'images/avatar_meireles.jpeg' %}{% endif %}" alt="Avatar de {{ profile.user.username }}" class="profile-image">
-            <div class="profile-detail"><span>Usuário:</span> {{ profile.user.username }}</div>
-            <div class="profile-detail"><span>Cargo:</span> {{ profile.cargo|default:"Sem cargo" }}</div>
-            <div class="profile-detail"><span>Instituição:</span> {{ profile.instituicao|default:"Sem instituição" }}</div>
-            <div class="profile-detail"><span>Cidade - UF:</span> {{ profile.cidade_uf|default:"Não informada" }}</div>
-            <div class="profile-detail"><span>E-mail:</span> {{ profile.email|default:"Não informado" }}</div>
-            <div class="profile-detail"><span>CPF:</span> {{ profile.cpf|default:"Não informado" }}</div>
-            <div class="profile-detail"><span>Celular:</span> {{ profile.celular|default:"Não informado" }}</div>
-            <div class="profile-detail"><span>Telefone:</span> {{ profile.fone|default:"Não informado" }}</div>
-            <div class="profile-detail"><span>Data de Criação:</span> {{ profile.data_criacao|date:"d/m/Y H:i" }}</div>
-            <div class="profile-detail"><span>Status:</span> {% if profile.ativo %}Ativo{% else %}Inativo{% endif %}</div>
+
+            <div class="profile-card-header">
+                <div class="header-emblem">
+                    <img src="{% static 'images/brasao_cidade_guaira.png' %}" alt="Brasão da Cidade">
+                </div>
+                <div class="header-titles">
+                    <span class="institution-name">{{ profile.instituicao|default:"Instituição não informada" }}</span>
+                    <span class="city-name">{{ profile.cidade_uf|default:"Cidade - UF não informada" }}</span>
+                </div>
+                <div class="header-emblem">
+                    <img src="{% static 'images/brasao_instituicao.png' %}" alt="Brasão da Instituição">
+                </div>
+            </div>
+
+            <hr class="profile-divider">
+
+            <div class="profile-card-body">
+                
+                <div class="profile-identity">
+                    <div class="user-details-main">
+                        <span class="user-full-name">{{ profile.user.get_full_name|default:profile.user.username }}</span>
+                        <span class="user-role">{{ profile.cargo|default:"Cargo não informado" }}</span>
+                    </div>
+                    <div class="user-avatar-container">
+                        {% if profile.foto %}
+                            <img src="{{ profile.foto.url }}" alt="Foto de {{ profile.user.username }}" class="profile-avatar">
+                        {% else %}
+                            <i class="bi bi-person-circle placeholder-avatar"></i>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="profile-details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label"><i class="bi bi-person"></i> Nome de Usuário</span>
+                        <span class="detail-value">{{ profile.user.username }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label"><i class="bi bi-envelope"></i> E-mail</span>
+                        <span class="detail-value">{{ profile.email|default:"Não informado" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label"><i class="bi bi-card-heading"></i> CPF</span>
+                        <span class="detail-value">{{ profile.cpf|default:"Não informado" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label"><i class="bi bi-phone"></i> Celular</span>
+                        <span class="detail-value">{{ profile.celular|default:"Não informado" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label"><i class="bi bi-telephone"></i> Telefone Fixo</span>
+                        <span class="detail-value">{{ profile.fone|default:"Não informado" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label"><i class="bi bi-calendar-check"></i> Membro Desde</span>
+                        <span class="detail-value">{{ profile.data_criacao|date:"d/m/Y" }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label"><i class="bi bi-toggle-on"></i> Status</span>
+                        <span class="detail-value status-{{ profile.ativo|yesno:'ativo,inativo' }}">
+                            {% if profile.ativo %}Ativo{% else %}Inativo{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-card-actions">
+                <a href="{% url 'usuario:user_edit' profile.pk %}" class="btn btn-update"><i class="bi bi-pencil"></i> Editar Perfil</a>
+                <a href="{% url 'usuario:user_list' %}" class="btn btn-secondary-custom"><i class="bi bi-arrow-left"></i> Voltar para a Lista</a>
+            </div>
         </div>
     </div>
 {% endblock %}

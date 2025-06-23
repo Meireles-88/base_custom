@@ -2,16 +2,28 @@
 {% extends 'logged_in/base_logged_in.html' %}
 {% load static %}
 
-{% block title %}Excluir Perfil - Sistema SI{% endblock %}
+{% block title %}Excluir Usuário - Sistema SI{% endblock %}
 
 {% block dashboard_content %}
-    <div>
-        <h2 class="page-header-title">Excluir Perfil de {{ profile.user.username }}</h2>
-        <p>Tem certeza que deseja excluir o perfil e o usuário?</p>
-        <form method="post">
+    <div class="page-header">
+        <h2 class="page-header-title">Excluir Usuário</h2>
+    </div>
+
+    <div class="content-card">
+        <h4 class="text-center mb-3">Confirmação de Exclusão</h4>
+        
+        <div class="alert alert-danger text-center" role="alert">
+            <i class="bi bi-exclamation-triangle-fill" style="font-size: 1.5rem; margin-right: 10px;"></i>
+            Você tem certeza que deseja excluir permanentemente o usuário <strong>{{ profile.user.username }}</strong>?
+            <p class="mt-2 mb-0"><strong>Atenção:</strong> Esta ação não pode ser desfeita. Todos os dados associados a este usuário serão removidos do sistema.</p>
+        </div>
+        
+        <form method="post" class="mt-4">
             {% csrf_token %}
-            <button type="submit" class="btn btn-delete">Confirmar Exclusão</button>
-            <a href="{% url 'usuario:user_list' %}" class="btn btn-secondary-custom">Cancelar</a>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'usuario:user_profile' profile.pk %}" class="btn btn-secondary-custom"><i class="bi bi-x-circle"></i> Cancelar</a>
+                <button type="submit" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Sim, Excluir Permanentemente</button>
+            </div>
         </form>
     </div>
 {% endblock %}

@@ -1,0 +1,174 @@
+/* #################################################################### */
+/* ### ESTILOS ESPECÍFICOS PARA A PÁGINA DE PERFIL DE USUÁRIO      ### */
+/* ### Todos os seletores usam .profile-page-container para isolamento ### */
+/* #################################################################### */
+
+.profile-page-container .user-profile-card {
+    display: block;
+    align-items: initial;
+    padding: 0;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+    background-color: var(--white);
+    border-radius: 12px; /* <--- LINHA ADICIONADA PARA ARREDONDAR AS BORDAS */
+}
+
+/* 1. Cabeçalho do Cartão */
+.profile-page-container .profile-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+}
+
+.profile-page-container .header-emblem img {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+}
+
+.profile-page-container .header-titles {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.profile-page-container .header-titles .institution-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
+.profile-page-container .header-titles .city-name {
+    font-size: 1rem;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+/* 2. Linha Divisória */
+.profile-page-container .profile-divider {
+    border: 0;
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 0 25px;
+}
+
+/* 3. Corpo do Cartão */
+.profile-page-container .profile-card-body {
+    padding: 25px;
+}
+
+.profile-page-container .profile-identity {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.profile-page-container .user-details-main .user-full-name {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.profile-page-container .user-details-main .user-role {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.profile-page-container .user-avatar-container .profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.profile-page-container .user-avatar-container .placeholder-avatar {
+    font-size: 90px;
+    color: var(--medium-grey);
+}
+
+.profile-page-container .profile-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.profile-page-container .detail-item {
+    background-color: var(--secondary-color);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.profile-page-container .detail-item .detail-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-light);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.profile-page-container .detail-item .detail-label i {
+    color: var(--primary-color);
+}
+
+.profile-page-container .detail-item .detail-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.profile-page-container .detail-value.status-ativo {
+    color: #198754;
+    font-weight: 700;
+}
+.profile-page-container .detail-value.status-inativo {
+    color: #dc3545;
+    font-weight: 700;
+}
+
+.profile-page-container .profile-card-actions {
+    padding: 20px 25px;
+    background-color: var(--light-grey);
+    border-top: 1px solid var(--border-color);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .profile-page-container .profile-card-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .profile-page-container .profile-identity {
+        flex-direction: column-reverse;
+        align-items: center;
+        text-align: center;
+    }
+    .profile-page-container .profile-details-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .profile-page-container .profile-card-actions {
+        flex-direction: column;
+    }
+    .profile-page-container .profile-card-actions .btn {
+        width: 100%;
+    }
+}
