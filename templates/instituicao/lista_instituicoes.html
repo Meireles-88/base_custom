@@ -1,0 +1,19 @@
+{# templates/instituicao/lista_instituicoes.html #}
+{% extends 'logged_in/base_logged_in.html' %}
+
+{% block title %}Instituições - Sistema SI{% endblock %}
+
+{% block dashboard_content %}
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h2 class="page-header-title mb-0">Gerenciamento de Instituições</h2>
+        {% if user.is_superuser %}
+            <a href="{% url 'instituicao:lista_tipos' %}" class="btn btn-secondary-custom">
+                <i class="bi bi-gear-fill"></i> Gerenciar Tipos de Instituição
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="content-card mt-3">
+        <p>Aqui será exibida a lista de instituições cadastradas no sistema. Utilize o botão "Gerenciar Tipos de Instituição" para configurar as categorias disponíveis.</p>
+    </div>
+{% endblock %}

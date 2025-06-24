@@ -1,0 +1,31 @@
+
+    source venv/Scripts/activate
+    .\venv\Scripts\Activate.ps1     
+
+
+#########################################################################################
+Bash
+    python manage.py popular_localidades
+
+    pip freeze > requirements.txt
+
+#########################################################################################
+Bash
+commit
+
+# Passo 1: Verifique os arquivos modificados (deve aparecer o instituicao/models.py)
+    git status
+
+# Passo 2: Adicione o arquivo modificado à área de preparação
+    git add instituicao/models.py
+
+# Passo 3: Faça o commit com uma mensagem descritiva
+    git commit -m "refactor(models): Ajusta função de upload para nomear brasões"
+
+# Passo 4: Envie a alteração para o seu repositório no GitHub
+    git push origin main
+
+#########################################################################################
+
+
+
