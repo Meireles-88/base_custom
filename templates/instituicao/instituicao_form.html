@@ -1,0 +1,128 @@
+{% extends 'logged_in/base_logged_in.html' %}
+{% load static %}
+
+{% block title %}{{ titulo_pagina }} - SI{% endblock %}
+
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/usuario/user_form_styles.css' %}">
+{% endblock %}
+
+{% block dashboard_content %}
+<div class="form-page-container">
+    <div class="page-header">
+        <h2 class="page-header-title">{{ titulo_pagina }}</h2>
+    </div>
+
+    {# Exibe mensagens de sucesso ou erro (do messages framework) #}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %} mt-3">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {# Exibe erros que não são específicos de um campo (ex: unique_together) #}
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+                <p class="mb-0">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="content-card form-card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-grid">
+
+                <div class="form-group full-width">
+                    <label for="{{ form.tipo.id_for_label }}">{{ form.tipo.label }}:</label>
+                    {{ form.tipo }}
+                    {% for error in form.tipo.errors %}
+                        <small class="text-danger d-block mt-1">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_estado">Estado:</label>
+                    <select name="estado" id="id_estado" class="form-select" required>
+                        <option value="">Selecione um estado...</option>
+                        {% for estado in estados %}
+                            <option value="{{ estado.id }}" {% if request.POST.estado|add:"0" == estado.id or estado.id == selected_estado_id %}selected{% endif %}>{{ estado.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.municipio.id_for_label }}">{{ form.municipio.label }}:</label>
+                    {{ form.municipio }}
+                    {% for error in form.municipio.errors %}
+                        <small class="text-danger d-block mt-1">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                {% for field in form.visible_fields %}
+                    {% if field.name != 'tipo' and field.name != 'municipio' %}
+                        <div class="form-group {% if field.name == 'brasao_instituicao' or field.name == 'brasao_municipio' or field.name == 'logradouro' %}full-width{% endif %}">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <small class="text-danger d-block mt-1">{{ error }}</small>
+                            {% endfor %}
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'instituicao:lista_instituicoes' %}" class="btn btn-secondary-custom">Cancelar</a>
+                <button type="submit" class="btn btn-primary-custom">Salvar Instituição</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const estadoSelect = document.getElementById('id_estado');
+        const municipioSelect = document.getElementById('id_municipio');
+        const url = "{% url 'instituicao:ajax_carregar_municipios' %}";
+
+        function carregarMunicipios() {
+            const estadoId = estadoSelect.value;
+            municipioSelect.innerHTML = '<option value="">Carregando...</option>';
+
+            if (estadoId) {
+                fetch(`${url}?estado_id=${estadoId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        municipioSelect.innerHTML = '<option value="">Selecione um município</option>';
+                        data.forEach(function(municipio) {
+                            const option = new Option(municipio.nome, municipio.id);
+                            {% if form.instance.municipio %}
+                                if (municipio.id === {{ form.instance.municipio.id }}) {
+                                    option.selected = true;
+                                }
+                            {% endif %}
+                            municipioSelect.add(option);
+                        });
+                    });
+            } else {
+                municipioSelect.innerHTML = '<option value="">Selecione um estado primeiro</option>';
+            }
+        }
+
+        estadoSelect.addEventListener('change', carregarMunicipios);
+
+        if (estadoSelect.value) {
+            carregarMunicipios();
+        }
+    });
+    </script>
+{% endblock %}

@@ -2,12 +2,26 @@
     source venv/Scripts/activate
     .\venv\Scripts\Activate.ps1     
 
+    python manage.py runserver  
+
+    python manage.py createsuperuser
+
 
 #########################################################################################
 Bash
     python manage.py popular_localidades
 
     pip freeze > requirements.txt
+
+#########################################################################################
+migrações.
+
+python manage.py makemigrations 
+python manage.py migrate
+
+python manage.py createsuperuser
+
+
 
 #########################################################################################
 Bash
@@ -18,6 +32,7 @@ commit
 
 # Passo 2: Adicione o arquivo modificado à área de preparação
     git add instituicao/models.py
+    git add . #(all)
 
 # Passo 3: Faça o commit com uma mensagem descritiva
     git commit -m "refactor(models): Ajusta função de upload para nomear brasões"
@@ -26,6 +41,16 @@ commit
     git push origin main
 
 #########################################################################################
+
+Apague o Arquivo do Banco de Dados
+Navegue até a pasta raiz do seu projeto (a que contém o manage.py).
+Encontre o arquivo chamado db.sqlite3.
+Delete este arquivo.
+
+Vá até a pasta usuario/migrations/.
+Delete todos os arquivos dentro dela, EXCETO o arquivo __init__.py.
+Vá até a pasta instituicao/migrations/.
+Delete todos os arquivos dentro dela, EXCETO o arquivo __init__.py.
 
 
 

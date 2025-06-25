@@ -1,19 +1,81 @@
-{# templates/instituicao/lista_instituicoes.html #}
 {% extends 'logged_in/base_logged_in.html' %}
+{% load static %}
 
 {% block title %}Instituições - Sistema SI{% endblock %}
 
 {% block dashboard_content %}
-    <div class="page-header d-flex justify-content-between align-items-center">
+    <div class="page-header d-flex justify-content-between align-items-center flex-wrap">
         <h2 class="page-header-title mb-0">Gerenciamento de Instituições</h2>
-        {% if user.is_superuser %}
-            <a href="{% url 'instituicao:lista_tipos' %}" class="btn btn-secondary-custom">
-                <i class="bi bi-gear-fill"></i> Gerenciar Tipos de Instituição
-            </a>
-        {% endif %}
+        <div class="header-actions-group">
+            <a href="{% url 'instituicao:cria_instituicao' %}" class="btn btn-primary-custom"><i class="bi bi-plus-lg"></i> Adicionar Instituição</a>
+            {% if user.is_superuser %}
+                <a href="{% url 'instituicao:lista_tipos' %}" class="btn btn-secondary-custom"><i class="bi bi-gear-fill"></i> Gerenciar Tipos</a>
+            {% endif %}
+        </div>
     </div>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success mt-3">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 
     <div class="content-card mt-3">
-        <p>Aqui será exibida a lista de instituições cadastradas no sistema. Utilize o botão "Gerenciar Tipos de Instituição" para configurar as categorias disponíveis.</p>
+        <div class="table-responsive-wrapper">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th style="width: 40%;">Nome da Instituição</th>
+                        <th style="width: 30%;">Localização</th>
+                        <th style="width: 15%;">CNPJ</th>
+                        <th style="width: 15%;" class="text-end">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for instituicao in instituicoes %}
+                    <tr>
+                        <td>{{ instituicao.nome_gerado }}</td>
+                        <td>{{ instituicao.municipio.nome }} / {{ instituicao.municipio.estado.uf }}</td>
+                        <td>{{ instituicao.cnpj|default:"Não informado" }}</td>
+                        <td class="text-end">
+                            {# --- LINHA MODIFICADA --- #}
+                            <a href="{% url 'instituicao:detalhe_instituicao' instituicao.pk %}" class="btn btn-sm btn-info text-white" title="Visualizar"><i class="bi bi-eye-fill"></i></a>
+                            <a href="{% url 'instituicao:edita_instituicao' instituicao.pk %}" class="btn btn-sm btn-update" title="Editar"><i class="bi bi-pencil-fill"></i></a>
+                            <a href="{% url 'instituicao:exclui_instituicao' instituicao.pk %}" class="btn btn-sm btn-danger" title="Excluir"><i class="bi bi-trash-fill"></i></a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center p-4">Nenhuma instituição cadastrada. Clique em "Adicionar Instituição" para começar.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {# Lógica de Paginação, só aparece se houver mais de uma página #}
+        {% if is_paginated %}
+        <nav aria-label="Navegação das Instituições" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; Primeira</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#">&laquo; Primeira</a></li>
+                    <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
+                {% endif %}
+
+                <li class="page-item active" aria-current="page"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a></li>
+                {% else %}
+                     <li class="page-item disabled"><a class="page-link" href="#">Próxima</a></li>
+                     <li class="page-item disabled"><a class="page-link" href="#">Última &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
     </div>
 {% endblock %}
