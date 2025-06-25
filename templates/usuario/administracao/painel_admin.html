@@ -1,0 +1,39 @@
+{% extends 'logged_in/base_logged_in.html' %}
+{% block title %}Administração do Sistema{% endblock %}
+
+{% block dashboard_content %}
+    <div class="page-header"><h2 class="page-header-title">Painel de Administração SI</h2></div>
+    <p>Utilize esta área para gerenciar os dados mestres do sistema.</p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-badge fs-1 text-primary"></i>
+                    <h5 class="card-title mt-3">Cargos</h5>
+                    <p class="card-text">Gerencie os cargos disponíveis para os usuários (Ex: Guarda Civil, Agente de Trânsito).</p>
+                    <a href="{% url 'usuario:lista_cargos' %}" class="btn btn-primary-custom">Gerenciar Cargos</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="bi bi-award fs-1 text-primary"></i>
+                    <h5 class="card-title mt-3">Patentes</h5>
+                    <p class="card-text">Gerencie a hierarquia de patentes (Ex: Comandante, Inspetor, GCM 1ª Classe).</p>
+                    <a href="{% url 'usuario:lista_patentes' %}" class="btn btn-primary-custom">Gerenciar Patentes</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-rolodex fs-1 text-primary"></i>
+                    <h5 class="card-title mt-3">Funções</h5>
+                    <p class="card-text">Gerencie as funções que definem permissões (Ex: Chefe de Turno).</p>
+                    <a href="{% url 'usuario:lista_funcoes' %}" class="btn btn-primary-custom">Gerenciar Funções</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

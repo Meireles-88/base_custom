@@ -60,6 +60,15 @@
                         <span>Instituições</span>
                     </a>
                 </li>
+                {# --- NOVO MENU DE ADMINISTRAÇÃO SI --- #}
+                {% if user.is_superuser %}
+                <li class="sidebar-menu-item">
+                    <a href="{% url 'usuario:painel_admin_si' %}" class="{% if 'admin-si' in request.path %}active{% endif %}">
+                        <i class="bi bi-shield-lock"></i>
+                        <span>Admin SI</span>
+                    </a>
+                </li>
+                {% endif %}
                 <li class="sidebar-menu-item">
                     <a href="#" aria-label="Relatórios">
                         <i class="bi bi-file-earmark-text"></i> {# Ícone para Relatórios #}
