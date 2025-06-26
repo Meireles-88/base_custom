@@ -40,6 +40,10 @@ commit
 # Passo 4: Envie a alteração para o seu repositório no GitHub
     git push origin main
 
+
+# Para baixar todas essas novidades
+    git pull origin main
+
 #########################################################################################
 
 Apague o Arquivo do Banco de Dados
