@@ -38,7 +38,6 @@
                         <td>{{ instituicao.municipio.nome }} / {{ instituicao.municipio.estado.uf }}</td>
                         <td>{{ instituicao.cnpj|default:"Não informado" }}</td>
                         <td class="text-end">
-                            {# --- LINHA MODIFICADA --- #}
                             <a href="{% url 'instituicao:detalhe_instituicao' instituicao.pk %}" class="btn btn-sm btn-info text-white" title="Visualizar"><i class="bi bi-eye-fill"></i></a>
                             <a href="{% url 'instituicao:edita_instituicao' instituicao.pk %}" class="btn btn-sm btn-update" title="Editar"><i class="bi bi-pencil-fill"></i></a>
                             <a href="{% url 'instituicao:exclui_instituicao' instituicao.pk %}" class="btn btn-sm btn-danger" title="Excluir"><i class="bi bi-trash-fill"></i></a>
@@ -53,7 +52,6 @@
             </table>
         </div>
         
-        {# Lógica de Paginação, só aparece se houver mais de uma página #}
         {% if is_paginated %}
         <nav aria-label="Navegação das Instituições" class="mt-4">
             <ul class="pagination justify-content-center">

@@ -1,0 +1,11 @@
+{% extends 'logged_in/base_logged_in.html' %}
+{% load static %}
+{% block title %}Dashboard - Sistema SI{% endblock %}
+{% block dashboard_content %}
+    <div class="page-header">
+        <h1 class="page-header-title">Bem-vindo, {{ user.get_full_name|default:user.username }}!</h1>
+        <p>Seu painel de operações diárias.</p>
+    </div>
+    <p>Você está lotado em: <strong>{{ instituicao.nome_gerado|default:"Nenhuma instituição vinculada" }}</strong></p>
+    {# Construiremos este dashboard com mais detalhes em breve #}
+{% endblock %}

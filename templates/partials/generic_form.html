@@ -1,0 +1,19 @@
+{% extends 'logged_in/base_logged_in.html' %}
+{% block title %}{{ titulo_pagina|default:'Formulário' }}{% endblock %}
+
+{% block dashboard_content %}
+    <div class="page-header">
+        <h2 class="page-header-title">{{ titulo_pagina|default:'Formulário' }}</h2>
+    </div>
+    <div class="content-card mt-3">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <hr>
+            <div class="d-flex justify-content-end gap-2">
+                <a href="{{ request.META.HTTP_REFERER|escape }}" class="btn btn-secondary-custom">Cancelar</a>
+                <button type="submit" class="btn btn-primary-custom">Salvar</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

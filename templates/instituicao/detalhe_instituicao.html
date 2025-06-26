@@ -5,7 +5,7 @@
 
 {% block extra_head %}
     {{ block.super }}
-    {# Podemos reutilizar o CSS do perfil de usuário, pois é bem parecido #}
+    {# Reutilizando o CSS do perfil de usuário para manter a consistência visual #}
     <link rel="stylesheet" href="{% static 'css/usuario/user_profile_styles.css' %}">
 {% endblock %}
 
@@ -69,8 +69,9 @@
         </div>
 
         <div class="profile-card-actions">
+            <a href="{% url 'instituicao:gerenciar_instituicao' instituicao.pk %}" class="btn btn-primary-custom"><i class="bi bi-gear-fill"></i> Gerenciar Instituição</a>
+            <a href="{% url 'instituicao:edita_instituicao' instituicao.pk %}" class="btn btn-update"><i class="bi bi-pencil"></i> Editar Dados</a>
             <a href="{% url 'instituicao:lista_instituicoes' %}" class="btn btn-secondary-custom"><i class="bi bi-arrow-left"></i> Voltar para a Lista</a>
-            <a href="{% url 'instituicao:edita_instituicao' instituicao.pk %}" class="btn btn-update"><i class="bi bi-pencil"></i> Editar Instituição</a>
         </div>
     </div>
 </div>

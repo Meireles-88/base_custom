@@ -3,21 +3,23 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from .models import UserProfile, Cargo, Patente, Funcao, Instituicao
 
-# --- FORMULÁRIOS DE GERENCIAMENTO (PARA ADMIN SI) ---
+# --- Formulários de Gerenciamento de Hierarquia (para Admin SI) ---
 
 class CargoForm(forms.ModelForm):
     class Meta:
         model = Cargo
-        fields = ['nome']
+        fields = ['instituicao', 'nome']
         widgets = {
+            'instituicao': forms.Select(attrs={'class': 'form-select'}),
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 class PatenteForm(forms.ModelForm):
     class Meta:
         model = Patente
-        fields = ['nome', 'ordem']
+        fields = ['instituicao', 'nome', 'ordem']
         widgets = {
+            'instituicao': forms.Select(attrs={'class': 'form-select'}),
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
             'ordem': forms.NumberInput(attrs={'class': 'form-control'}),
         }
@@ -25,24 +27,30 @@ class PatenteForm(forms.ModelForm):
 class FuncaoForm(forms.ModelForm):
     class Meta:
         model = Funcao
-        fields = ['nome']
+        fields = ['instituicao', 'nome']
         widgets = {
+            'instituicao': forms.Select(attrs={'class': 'form-select'}),
             'nome': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-# --- FORMULÁRIOS DE USUÁRIO (Existentes e atualizados) ---
+
+# --- Formulários de Gerenciamento de Usuários ---
 
 class AdminUserCreationForm(forms.ModelForm):
+    """ Formulário para um Admin SI criar um novo usuário e seu perfil completo. """
     username = forms.CharField(label='Nome de Usuário', widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(label='Senha', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    
+    # Estes campos serão populados dinamicamente no futuro
+    cargo = forms.ModelChoiceField(queryset=Cargo.objects.all(), required=False, widget=forms.Select(attrs={'class': 'form-select'}))
+    patente = forms.ModelChoiceField(queryset=Patente.objects.all(), required=False, widget=forms.Select(attrs={'class': 'form-select'}))
+    funcoes = forms.ModelMultipleChoiceField(queryset=Funcao.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
+
     class Meta:
         model = UserProfile
         fields = ['instituicao', 'cargo', 'patente', 'funcoes', 'cpf', 'celular', 'foto', 'is_admin_instituicao']
         widgets = {
             'instituicao': forms.Select(attrs={'class': 'form-select'}),
-            'cargo': forms.Select(attrs={'class': 'form-select'}),
-            'patente': forms.Select(attrs={'class': 'form-select'}),
-            'funcoes': forms.CheckboxSelectMultiple, # Melhor widget para ManyToMany
             'cpf': forms.TextInput(attrs={'class': 'form-control'}),
             'celular': forms.TextInput(attrs={'class': 'form-control'}),
             'foto': forms.FileInput(attrs={'class': 'form-control'}),
@@ -57,9 +65,11 @@ class AdminUserCreationForm(forms.ModelForm):
 
     @transaction.atomic
     def save(self, commit=True):
-        user = User.objects.create_user(username=self.cleaned_data['username'], password=self.cleaned_data['password'])
+        user = User.objects.create_user(
+            username=self.cleaned_data['username'],
+            password=self.cleaned_data['password']
+        )
         profile = user.userprofile
-        # Atualiza os campos do perfil
         profile.instituicao = self.cleaned_data.get('instituicao')
         profile.cargo = self.cleaned_data.get('cargo')
         profile.patente = self.cleaned_data.get('patente')
@@ -69,12 +79,11 @@ class AdminUserCreationForm(forms.ModelForm):
         profile.is_admin_instituicao = self.cleaned_data.get('is_admin_instituicao', False)
         if commit:
             profile.save()
-            # O save de ManyToMany deve ocorrer após o save da instância principal
             profile.funcoes.set(self.cleaned_data.get('funcoes'))
         return profile
 
-
 class UserProfileEditForm(forms.ModelForm):
+    """ Formulário para o Admin SI editar os dados de um usuário e seu perfil. """
     first_name = forms.CharField(label='Nome', max_length=100, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     last_name = forms.CharField(label='Sobrenome', max_length=100, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(label='E-mail', required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))
@@ -115,5 +124,5 @@ class UserProfileEditForm(forms.ModelForm):
         if commit:
             user.save()
             profile.save()
-            self.save_m2m() # Salva as relações ManyToMany
+            self.save_m2m()
         return profile

@@ -1,0 +1,19 @@
+{% extends 'logged_in/base_logged_in.html' %}
+{% block title %}Confirmar Exclusão{% endblock %}
+
+{% block dashboard_content %}
+    <div class="page-header"><h2 class="page-header-title">Confirmar Exclusão</h2></div>
+    <div class="content-card mt-3">
+        <form method="post">
+            {% csrf_token %}
+            <div class="alert alert-danger">
+                <p class="mb-0">Você tem certeza que deseja excluir o item: <strong>"{{ object.nome }}"</strong>?</p>
+                <p><small>Atenção: Esta ação não poderá ser desfeita.</small></p>
+            </div>
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <a href="{{ request.META.HTTP_REFERER|escape }}" class="btn btn-secondary-custom">Cancelar</a>
+                <button type="submit" class="btn btn-danger">Sim, tenho certeza. Excluir.</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
