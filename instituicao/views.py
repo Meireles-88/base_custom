@@ -1,19 +1,17 @@
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
-from django.shortcuts import get_object_or_404
-from django.views.generic.edit import FormMixin
+from django.shortcuts import get_object_or_404, render, redirect
 
-
+# Importações de Modelos, Formulários e Mixins
 from .models import Instituicao, TipoInstituicao, Estado, Municipio
 from usuario.models import UserProfile, Cargo, Patente, Funcao
 from .forms import InstituicaoForm, TipoInstituicaoForm
 from usuario.forms import CargoForm, PatenteForm, FuncaoForm
 from .mixins import SuperuserRequiredMixin, InstituicaoAdminRequiredMixin
-
 
 # --- Views de Gerenciamento Geral de Instituições (para Admin SI) ---
 
@@ -38,7 +36,7 @@ class InstituicaoCreateView(SuperuserRequiredMixin, SuccessMessageMixin, CreateV
                 form.fields['municipio'].queryset = Municipio.objects.filter(estado_id=estado_id).order_by('nome')
             except (ValueError, TypeError): pass
         return form
-    
+
     def form_invalid(self, form):
         messages.error(self.request, "Não foi possível salvar a instituição. Por favor, corrija os erros abaixo.")
         return super().form_invalid(form)
@@ -73,7 +71,7 @@ class InstituicaoUpdateView(SuperuserRequiredMixin, SuccessMessageMixin, UpdateV
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['titulo_pagina'] = 'Editar Instituição'
+        context['titulo_pagina'] = f'Editar Instituição: {self.object.nome_gerado}'
         context['estados'] = Estado.objects.all()
         if self.object.municipio:
             context['selected_estado_id'] = self.object.municipio.estado.id
@@ -105,6 +103,8 @@ class InstituicaoMembrosListView(InstituicaoAdminRequiredMixin, ListView):
 @login_required
 def carregar_municipios(request):
     estado_id = request.GET.get('estado_id')
+    if not estado_id:
+        return JsonResponse([], safe=False)
     municipios = Municipio.objects.filter(estado_id=estado_id).order_by('nome')
     return JsonResponse(list(municipios.values('id', 'nome')), safe=False)
 
@@ -267,17 +267,32 @@ class FuncaoDeleteView(BaseGerenciarView, SuccessMessageMixin, DeleteView):
     def get_success_url(self):
         return reverse_lazy('instituicao:gerenciar_funcoes', kwargs={'instituicao_pk': self.instituicao.pk})
 
+
 # --- Views de Tipo de Instituição (Global, para Admin SI) ---
-class TipoInstituicaoListView(SuperuserRequiredMixin, ListView):
-    model = TipoInstituicao
+class TipoInstituicaoView(SuperuserRequiredMixin, View):
     template_name = 'instituicao/tipo/lista.html'
-    context_object_name = 'tipos'
-    paginate_by = 10
+    form_class = TipoInstituicaoForm
+    def get(self, request, *args, **kwargs):
+        tipos = TipoInstituicao.objects.all()
+        form = self.form_class()
+        context = {'tipos': tipos, 'form': form}
+        return render(request, self.template_name, context)
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Novo tipo de instituição adicionado com sucesso!")
+            return redirect('instituicao:lista_tipos')
+        else:
+            tipos = TipoInstituicao.objects.all()
+            messages.error(request, "Erro ao adicionar. Verifique os dados no formulário.")
+            context = {'tipos': tipos, 'form': form}
+            return render(request, self.template_name, context)
 
 class TipoInstituicaoUpdateView(SuperuserRequiredMixin, SuccessMessageMixin, UpdateView):
     model = TipoInstituicao
     form_class = TipoInstituicaoForm
-    template_name = 'instituicao/tipo/form.html'
+    template_name = 'partials/generic_form.html'
     success_url = reverse_lazy('instituicao:lista_tipos')
     success_message = "Tipo de instituição atualizado com sucesso!"
     def get_context_data(self, **kwargs):
@@ -287,6 +302,6 @@ class TipoInstituicaoUpdateView(SuperuserRequiredMixin, SuccessMessageMixin, Upd
 
 class TipoInstituicaoDeleteView(SuperuserRequiredMixin, SuccessMessageMixin, DeleteView):
     model = TipoInstituicao
-    template_name = 'instituicao/tipo/confirm_delete.html'
+    template_name = 'partials/generic_confirm_delete.html'
     success_url = reverse_lazy('instituicao:lista_tipos')
     success_message = "Tipo de instituição excluído com sucesso!"

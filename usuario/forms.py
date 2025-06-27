@@ -3,38 +3,52 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from .models import UserProfile, Cargo, Patente, Funcao, Instituicao
 
-# --- Formulários de Gerenciamento de Hierarquia (para Admin SI) ---
+# --- Formulários de Gerenciamento de Hierarquia (para Admin Institucional / SI) ---
 
 class CargoForm(forms.ModelForm):
+    """ Formulário para criar/editar um Cargo dentro de uma instituição. """
     class Meta:
         model = Cargo
-        fields = ['instituicao', 'nome']
+        # CORREÇÃO: O campo 'instituicao' foi removido.
+        # A view irá associá-lo automaticamente com base na URL.
+        fields = ['nome']
         widgets = {
-            'instituicao': forms.Select(attrs={'class': 'form-select'}),
-            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'nome': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Guarda Civil'}),
+        }
+        labels = {
+            'nome': 'Nome do Cargo'
         }
 
 class PatenteForm(forms.ModelForm):
+    """ Formulário para criar/editar uma Patente dentro de uma instituição. """
     class Meta:
         model = Patente
-        fields = ['instituicao', 'nome', 'ordem']
+        # CORREÇÃO: O campo 'instituicao' foi removido.
+        fields = ['nome', 'ordem']
         widgets = {
-            'instituicao': forms.Select(attrs={'class': 'form-select'}),
-            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'nome': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Inspetor Chefe'}),
             'ordem': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'nome': 'Nome da Patente',
+            'ordem': 'Ordem Hierárquica (menor = mais alto na hierarquia)',
         }
 
 class FuncaoForm(forms.ModelForm):
+    """ Formulário para criar/editar uma Função dentro de uma instituição. """
     class Meta:
         model = Funcao
-        fields = ['instituicao', 'nome']
+        # CORREÇÃO: O campo 'instituicao' foi removido.
+        fields = ['nome']
         widgets = {
-            'instituicao': forms.Select(attrs={'class': 'form-select'}),
-            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'nome': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Chefe de Turno'}),
+        }
+        labels = {
+            'nome': 'Nome da Função'
         }
 
 
-# --- Formulários de Gerenciamento de Usuários ---
+# --- Formulários de Gerenciamento de Usuários (para Admin SI) ---
 
 class AdminUserCreationForm(forms.ModelForm):
     """ Formulário para um Admin SI criar um novo usuário e seu perfil completo. """

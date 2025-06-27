@@ -1,15 +1,26 @@
+# instituicao/forms.py
 from django import forms
 from .models import TipoInstituicao, Instituicao, Municipio
 
 class TipoInstituicaoForm(forms.ModelForm):
+    """ Formulário para criar/editar os Tipos de Instituição globais. """
     class Meta:
         model = TipoInstituicao
         fields = ['nome']
-        widgets = { 'nome': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Guarda Civil Municipal'}) }
-        labels = { 'nome': 'Nome do Tipo de Instituição' }
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Guarda Civil Municipal'})
+        }
+        labels = {
+            'nome': 'Nome do Tipo de Instituição'
+        }
 
 class InstituicaoForm(forms.ModelForm):
-    municipio = forms.ModelChoiceField(queryset=Municipio.objects.none(), label="Município", widget=forms.Select(attrs={'class': 'form-select'}))
+    """ Formulário para criar/editar uma Instituição específica. """
+    municipio = forms.ModelChoiceField(
+        queryset=Municipio.objects.none(),
+        label="Município",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
     class Meta:
         model = Instituicao
         fields = [

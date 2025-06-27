@@ -1,66 +1,66 @@
-{# templates/instituicao/tipo/lista.html #}
 {% extends 'logged_in/base_logged_in.html' %}
+{% load static %}
 
-{% block title %}Tipos de Instituição - SI{% endblock %}
+{% block title %}Gerenciar Tipos de Instituição - SI{% endblock %}
 
 {% block dashboard_content %}
-    <div class="page-header">
+    <div class="page-header d-flex justify-content-between align-items-center">
         <h2 class="page-header-title mb-0">Tipos de Instituição</h2>
+        <div id="add-type-button-wrapper">
+            <button id="show-form-btn" class="btn btn-primary-custom"><i class="bi bi-plus-lg"></i> Adicionar Novo Tipo</button>
+        </div>
     </div>
 
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}success{% endif %} mt-3">{{ message }}</div>
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %} mt-3">{{ message }}</div>
         {% endfor %}
     {% endif %}
 
-    <div class="content-card mt-3">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th class="text-end">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for tipo in tipos %}
-                <tr>
-                    <td>{{ tipo.nome }}</td>
-                    <td class="text-end">
-                        <a href="{% url 'instituicao:edita_tipo' tipo.pk %}" class="btn btn-sm btn-update"><i class="bi bi-pencil-fill"></i> Editar</a>
-                        <a href="{% url 'instituicao:exclui_tipo' tipo.pk %}" class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i> Excluir</a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="2" class="text-center p-4">Nenhum tipo de instituição cadastrado.</td>
-                </tr>
-                {% endfor %}
-                
-                {# --- NOVA LINHA PARA O FORMULÁRIO IN-LINE --- #}
-                <tr id="add-type-form-row" style="display: none;">
-                    <form method="post" id="add-type-form" class="d-contents">
-                        {% csrf_token %}
-                        <td>
-                            {{ form.nome }}
-                        </td>
-                        <td class="text-end">
-                             <button type="button" id="cancel-add-btn" class="btn btn-sm btn-secondary-custom">Cancelar</button>
-                             <button type="submit" class="btn btn-sm btn-primary-custom">Salvar</button>
-                        </td>
-                    </form>
-                </tr>
-                {# --- FIM DA NOVA LINHA --- #}
-
-            </tbody>
-        </table>
-
-        <div class="mt-4 pt-3 border-top">
-            <div id="add-type-button-wrapper">
-                <button id="show-form-btn" class="btn btn-primary-custom"><i class="bi bi-plus-lg"></i> Adicionar Novo Tipo</button>
+    {# --- CARD DO FORMULÁRIO DE ADIÇÃO --- #}
+    {# Começa escondido com a classe 'd-none' do Bootstrap #}
+    <div id="add-type-card" class="content-card mt-3 d-none">
+        <h5 class="mb-3">Adicionar Novo Tipo</h5>
+        <form action="{% url 'instituicao:lista_tipos' %}" method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                {{ form.nome }}
+                <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> Salvar</button>
+                <button type="button" id="cancel-add-btn" class="btn btn-secondary">Cancelar</button>
             </div>
-        </div>
+             {% for error in form.nome.errors %}
+                <small class="text-danger d-block mt-1">{{ error }}</small>
+            {% endfor %}
+        </form>
+    </div>
 
+    {# --- TABELA DE LISTAGEM --- #}
+    <div class="content-card mt-3">
+        <div class="table-responsive-wrapper">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Nome do Tipo de Instituição</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tipo in tipos %}
+                    <tr>
+                        <td>{{ tipo.nome }}</td>
+                        <td class="text-end">
+                            <a href="{% url 'instituicao:edita_tipo' tipo.pk %}" class="btn btn-sm btn-update" title="Editar"><i class="bi bi-pencil-fill"></i></a>
+                            <a href="{% url 'instituicao:exclui_tipo' tipo.pk %}" class="btn btn-sm btn-danger" title="Excluir"><i class="bi bi-trash-fill"></i></a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="text-center p-4">Nenhum tipo de instituição cadastrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
 
@@ -68,20 +68,29 @@
     {{ block.super }}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Script carregado. Procurando pelos botões...');
             const showFormBtn = document.getElementById('show-form-btn');
-            const formRow = document.getElementById('add-type-form-row');
+            const addTypeCard = document.getElementById('add-type-card');
             const cancelBtn = document.getElementById('cancel-add-btn');
             const buttonWrapper = document.getElementById('add-type-button-wrapper');
 
-            showFormBtn.addEventListener('click', function() {
-                formRow.style.display = 'table-row'; // Mostra a linha da tabela
-                buttonWrapper.style.display = 'none';
-            });
+            if (showFormBtn && addTypeCard && cancelBtn) {
+                console.log('Todos os elementos foram encontrados!');
+                
+                showFormBtn.addEventListener('click', function() {
+                    console.log('Botão "Adicionar Novo Tipo" clicado.');
+                    addTypeCard.classList.remove('d-none'); // Remove a classe que esconde
+                    buttonWrapper.style.display = 'none';    // Esconde o botão "Adicionar"
+                });
 
-            cancelBtn.addEventListener('click', function() {
-                formRow.style.display = 'none'; // Esconde a linha da tabela
-                buttonWrapper.style.display = 'block';
-            });
+                cancelBtn.addEventListener('click', function() {
+                    console.log('Botão "Cancelar" clicado.');
+                    addTypeCard.classList.add('d-none');   // Adiciona a classe que esconde de volta
+                    buttonWrapper.style.display = 'block'; // Mostra o botão novamente
+                });
+            } else {
+                console.error('Um ou mais elementos do formulário dinâmico não foram encontrados na página.');
+            }
         });
     </script>
 {% endblock %}

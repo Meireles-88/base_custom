@@ -11,8 +11,8 @@ urlpatterns = [
     path('<int:pk>/editar/', views.user_edit, name='user_edit'),
     path('<int:pk>/deletar/', views.user_delete, name='user_delete'),
 
-    # Rota para o Painel de Administração SI
-    path('admin-si/', views.AdministracaoListView.as_view(), name='painel_admin_si'),
+    # Rota para o Painel de Administração SI (apontando para a view correta)
+    path('admin-si/', views.AdministracaoSIView.as_view(), name='painel_admin_si'),
 
     # Rotas para Cargos
     path('cargos/', views.CargoListView.as_view(), name='lista_cargos'),

@@ -1,20 +1,20 @@
 {% extends 'logged_in/base_logged_in.html' %}
-{% block title %}Gerenciar {{ titulo }}{% endblock %}
+{% block title %}Gerenciar {{ titulo }} - {{ instituicao.nome_gerado }}{% endblock %}
 
 {% block dashboard_content %}
     <div class="page-header d-flex justify-content-between align-items-center">
-        <h2 class="page-header-title mb-0">Gerenciar {{ titulo }}</h2>
-        <a href="{% url url_novo %}" class="btn btn-primary-custom"><i class="bi bi-plus-lg"></i> Adicionar Novo(a) {{ titulo|slice:":-1" }}</a>
+        <div>
+            <h2 class="page-header-title mb-0">Gerenciar {{ titulo }}</h2>
+            <p class="text-muted mb-0">Para a instituição: {{ instituicao.nome_gerado }}</p>
+        </div>
+        {# --- CORREÇÃO AQUI: Passando o 'instituicao_pk' para a URL --- #}
+        <a href="{% url url_novo instituicao_pk=instituicao.pk %}" class="btn btn-primary-custom"><i class="bi bi-plus-lg"></i> Adicionar</a>
     </div>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-success mt-3">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
+    {% if messages %}{% for message in messages %}<div class="alert alert-success mt-3">{{ message }}</div>{% endfor %}{% endif %}
 
     <div class="content-card mt-3">
-        <table class="table table-hover">
+        <table class="table table-hover align-middle">
             <thead>
                 <tr>
                     <th>Nome</th>
@@ -28,14 +28,13 @@
                     <td>{{ item.nome }}</td>
                     {% if titulo == "Patentes" %}<td>{{ item.ordem }}</td>{% endif %}
                     <td class="text-end">
-                        <a href="{% url url_edicao item.pk %}" class="btn btn-sm btn-update">Editar</a>
-                        <a href="{% url url_exclusao item.pk %}" class="btn btn-sm btn-danger">Excluir</a>
+                        {# --- CORREÇÃO AQUI: Passando ambos os PKs para as URLs --- #}
+                        <a href="{% url url_edicao instituicao_pk=instituicao.pk pk=item.pk %}" class="btn btn-sm btn-update">Editar</a>
+                        <a href="{% url url_exclusao instituicao_pk=instituicao.pk pk=item.pk %}" class="btn btn-sm btn-danger">Excluir</a>
                     </td>
                 </tr>
                 {% empty %}
-                <tr>
-                    <td colspan="3" class="text-center p-4">Nenhum item cadastrado.</td>
-                </tr>
+                <tr><td colspan="{% if titulo == "Patentes" %}3{% else %}2{% endif %}" class="text-center p-4">Nenhum item cadastrado.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
