@@ -44,7 +44,7 @@ commit
     git add . #(all)
 
 # Passo 3: Faça o commit com uma mensagem descritiva
-    git commit -m "refactor(models): Ajusta função de upload para nomear brasões"
+    git commit -m "concluímos toda a FASE 1 do nosso plano"
 
 # Passo 4: Envie a alteração para o seu repositório no GitHub
     git push origin main
@@ -52,6 +52,9 @@ commit
 
 # Para baixar todas essas novidades
     git pull origin main
+
+
+    pip install -r requirements.txt
 
 #########################################################################################
 
