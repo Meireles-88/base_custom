@@ -67,3 +67,41 @@ Delete todos os arquivos dentro dela, EXCETO o arquivo __init__.py.
 
 
 
+entregue-me o conteúdo completo para substituição:
+
+entregue-me os arquivos completos para que eu apenas substitua.
+
+Arquivos a serem Modificados e Criados:
+########################################################
+
+
+instituicao/mixins.py (Verificação)- ok
+
+Modificação: Apenas garantir que este arquivo exista e esteja correto, pois ele é a base da nossa segurança.
+########################################################
+
+instituicao/forms.py (Limpeza) - ok
+
+Modificação: Este arquivo deve conter apenas os formulários relacionados diretamente à app instituicao, que são o InstituicaoForm e o TipoInstituicaoForm. Vamos remover qualquer outra classe daqui para manter a organização.
+########################################################
+
+usuario/forms.py (Consolidação) - ok
+
+Modificação: Este arquivo será o lar definitivo para os formulários que gerenciam a hierarquia (CargoForm, PatenteForm, FuncaoForm) e os usuários (AdminUserCreationForm, UserProfileEditForm), pois todos esses modelos pertencem à app usuario.
+########################################################
+
+instituicao/views.py (Adição de Funcionalidade)
+
+Modificação: Vamos adicionar as duas funções que faltam (entrar_contexto_institucional e sair_contexto_institucional). Também vamos corrigir os imports no topo do arquivo para que ele busque os formulários de hierarquia do local correto (usuario.forms).
+########################################################
+
+instituicao/urls.py (Adição de Rotas)
+
+Modificação: Vamos adicionar as duas rotas que apontam para as novas funções de entrar e sair do contexto.
+
+########################################################
+Templates (Ajuste de Links)
+
+templates/painel/dashboard.html: O link nos cards das instituições será atualizado para apontar para a nova rota entrar_contexto.
+
+templates/_bases/institucional_base.html: O botão "Voltar à Visão Global" para o Admin SI será atualizado para apontar para a nova rota sair_contexto.

@@ -1,3 +1,4 @@
+# usuario/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -26,6 +27,8 @@ def user_create(request):
             form.save()
             messages.success(request, 'Novo usuário criado com sucesso!')
             return redirect('usuario:user_list')
+        else:
+            messages.error(request, 'Erro ao criar o usuário. Verifique os dados.')
     else:
         form = AdminUserCreationForm()
     context = {'form': form, 'titulo_pagina': 'Adicionar Novo Usuário (Admin SI)'}
@@ -50,6 +53,8 @@ def user_edit(request, pk):
             form.save()
             messages.success(request, f'Perfil de {profile.user.username} atualizado com sucesso!')
             return redirect('usuario:user_profile', pk=profile.pk)
+        else:
+            messages.error(request, 'Erro ao atualizar o perfil. Verifique os dados.')
     else:
         form = UserProfileEditForm(instance=profile)
     context = {'form': form, 'titulo_pagina': f'Editar Perfil de {profile.user.username}'}
@@ -72,6 +77,11 @@ def user_delete(request, pk):
         return redirect('usuario:user_list')
     return render(request, 'usuario/user_delete.html', {'profile': profile})
 
+@login_required
+def user_list(request):
+    all_profiles = UserProfile.objects.select_related('user', 'instituicao', 'cargo', 'patente').all()
+    context = {'profiles': all_profiles}
+    return render(request, 'usuario/user_list.html', context)
 
 # --- PAINEL DE ADMINISTRAÇÃO SI ---
 class AdministracaoSIView(SuperuserRequiredMixin, ListView):

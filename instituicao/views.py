@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View
 from django.contrib.messages.views import SuccessMessageMixin
@@ -8,41 +8,37 @@ from django.shortcuts import get_object_or_404, render, redirect
 
 # Importações de Modelos, Formulários e Mixins
 from .models import Instituicao, TipoInstituicao, Estado, Municipio
-from usuario.models import UserProfile
+from usuario.models import UserProfile, Cargo, Patente, Funcao
 from .forms import InstituicaoForm, TipoInstituicaoForm
 from usuario.forms import CargoForm, PatenteForm, FuncaoForm
 from .mixins import SuperuserRequiredMixin, InstituicaoAdminRequiredMixin
 
 
-
 # --- VIEWS PARA MUDANÇA DE CONTEXTO ---
 @login_required
 def entrar_contexto_institucional(request, pk):
-    """ Salva na sessão o ID da instituição que o Admin SI quer gerenciar e o redireciona. """
-    if not request.user.is_superuser:
-        messages.error(request, "Acesso não permitido.")
-        return redirect('painel:dashboard')
-    
+    """ Salva na sessão o ID da instituição que o usuário quer gerenciar/visualizar. """
     instituicao = get_object_or_404(Instituicao, pk=pk)
+
+    if not request.user.is_superuser:
+        if not hasattr(request.user, 'userprofile') or request.user.userprofile.instituicao != instituicao:
+            messages.error(request, "Acesso não permitido.")
+            return redirect('painel:dashboard')
+
     request.session['managing_institution_id'] = instituicao.pk
-    messages.info(request, f"Você agora está gerenciando a instituição: {instituicao.nome_gerado}")
-    
-    # Redireciona para o perfil da instituição, agora DENTRO do novo contexto
+    messages.info(request, f"Você agora está no ambiente da instituição: {instituicao.nome_gerado}")
     return redirect('instituicao:detalhe_instituicao', pk=instituicao.pk)
 
 @login_required
 def sair_contexto_institucional(request):
-    """ Limpa da sessão o ID da instituição, retornando o Admin SI à visão global (Lobby). """
+    """ Limpa da sessão o ID da instituição, retornando o usuário ao seu Lobby. """
     if 'managing_institution_id' in request.session:
         del request.session['managing_institution_id']
-        messages.info(request, "Você retornou à Visão Global do Administrador SI.")
-        
+        messages.info(request, "Você retornou à sua visão geral.")
     return redirect('painel:dashboard')
 
 
-
 # --- Views de Gerenciamento Geral de Instituições (para Admin SI) ---
-
 class InstituicaoListView(SuperuserRequiredMixin, ListView):
     model = Instituicao
     template_name = 'instituicao/lista_instituicoes.html'
@@ -64,7 +60,7 @@ class InstituicaoCreateView(SuperuserRequiredMixin, SuccessMessageMixin, CreateV
                 form.fields['municipio'].queryset = Municipio.objects.filter(estado_id=estado_id).order_by('nome')
             except (ValueError, TypeError): pass
         return form
-    
+
     def form_invalid(self, form):
         messages.error(self.request, "Não foi possível salvar a instituição. Por favor, corrija os erros abaixo.")
         return super().form_invalid(form)
@@ -107,9 +103,15 @@ class InstituicaoUpdateView(SuperuserRequiredMixin, SuccessMessageMixin, UpdateV
 
 class InstituicaoDeleteView(SuperuserRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Instituicao
-    template_name = 'instituicao/instituicao_confirm_delete.html'
+    template_name = 'partials/generic_confirm_delete.html'
     success_url = reverse_lazy('instituicao:lista_instituicoes')
     success_message = "Instituição excluída com sucesso!"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo'] = "Excluir Instituição"
+        return context
+
+# --- Views de Visualização e Gerenciamento Institucional ---
 
 class InstituicaoDetailView(InstituicaoAdminRequiredMixin, DetailView):
     model = Instituicao
@@ -117,6 +119,7 @@ class InstituicaoDetailView(InstituicaoAdminRequiredMixin, DetailView):
     context_object_name = 'instituicao'
 
 class InstituicaoMembrosListView(InstituicaoAdminRequiredMixin, ListView):
+    model = UserProfile
     template_name = 'instituicao/membros_lista.html'
     context_object_name = 'membros'
     paginate_by = 20
@@ -131,8 +134,7 @@ class InstituicaoMembrosListView(InstituicaoAdminRequiredMixin, ListView):
 @login_required
 def carregar_municipios(request):
     estado_id = request.GET.get('estado_id')
-    if not estado_id:
-        return JsonResponse([], safe=False)
+    if not estado_id: return JsonResponse([], safe=False)
     municipios = Municipio.objects.filter(estado_id=estado_id).order_by('nome')
     return JsonResponse(list(municipios.values('id', 'nome')), safe=False)
 
@@ -143,7 +145,7 @@ class GerenciarInstituicaoView(InstituicaoAdminRequiredMixin, DetailView):
     template_name = 'instituicao/gerenciar/painel.html'
     context_object_name = 'instituicao'
 
-# --- CLASSE BASE PARA AS VIEWS DE GERENCIAMENTO ---
+# --- CLASSE BASE PARA AS VIEWS DE GERENCIAMENTO DE HIERARQUIA---
 class BaseGerenciarView(InstituicaoAdminRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         self.instituicao = get_object_or_404(Instituicao, pk=self.kwargs['instituicao_pk'])
@@ -153,16 +155,16 @@ class BaseGerenciarView(InstituicaoAdminRequiredMixin):
         context['instituicao'] = self.instituicao
         return context
 
-# --- VIEW UNIFICADA PARA GERENCIAR HIERARQUIA ---
+# --- VIEW UNIFICADA PARA GERENCIAR HIERARQUIA (CRIAÇÃO IN-LINE E LISTAGEM) ---
 class GerenciarHierarquiaView(BaseGerenciarView, View):
     template_name = 'instituicao/gerenciar/gerenciar_hierarquia.html'
 
     def get_context_data(self, **kwargs):
-        # A instituicao já é definida no dispatch da classe base
+        # A instituição é pega do 'dispatch' da classe base
         context = super().get_context_data(**kwargs)
         context.update({
             'cargos': Cargo.objects.filter(instituicao=self.instituicao),
-            'patentes': Patente.objects.filter(instituicao=self.instituicao),
+            'patentes': Patente.objects.filter(instituicao=self.instituicao).order_by('ordem'),
             'funcoes': Funcao.objects.filter(instituicao=self.instituicao),
             'cargo_form': CargoForm(),
             'patente_form': PatenteForm(),
@@ -171,14 +173,17 @@ class GerenciarHierarquiaView(BaseGerenciarView, View):
         return context
 
     def get(self, request, *args, **kwargs):
+        # Para a view funcionar, o 'instituicao_pk' é o 'pk' da URL principal
+        self.instituicao = get_object_or_404(Instituicao, pk=kwargs.get('instituicao_pk'))
         context = self.get_context_data(**kwargs)
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        self.instituicao = get_object_or_404(Instituicao, pk=kwargs.get('instituicao_pk'))
         form_type = request.POST.get('form_type')
         form_map = {'cargo': CargoForm, 'patente': PatenteForm, 'funcao': FuncaoForm}
-        
         form_class = form_map.get(form_type)
+
         if not form_class:
             messages.error(request, "Ação inválida.")
             return redirect('instituicao:gerenciar_instituicao', pk=self.instituicao.pk)
@@ -190,12 +195,58 @@ class GerenciarHierarquiaView(BaseGerenciarView, View):
             instance.save()
             messages.success(request, f"{form.Meta.model._meta.verbose_name.title()} adicionado com sucesso!")
         else:
-            context = self.get_context_data(**kwargs)
-            context[f'{form_type}_form'] = form
+            context = self.get_context_data(instituicao_pk=self.instituicao.pk)
+            context[f'{form_type}_form'] = form 
             messages.error(request, f"Erro ao adicionar: {next(iter(form.errors.values()))[0]}")
             return render(request, self.template_name, context)
             
         return redirect('instituicao:gerenciar_hierarquia', instituicao_pk=self.instituicao.pk)
+
+# --- VIEWS DE EDIÇÃO E EXCLUSÃO PARA HIERARQUIA ---
+class BaseHierarquiaUpdateView(BaseGerenciarView, SuccessMessageMixin, UpdateView):
+    template_name = 'partials/generic_form.html'
+    def get_queryset(self):
+        return self.model.objects.filter(instituicao=self.instituicao)
+    def get_success_url(self):
+        return reverse_lazy('instituicao:gerenciar_hierarquia', kwargs={'instituicao_pk': self.kwargs['instituicao_pk']})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titulo_pagina'] = f"Editar {self.model._meta.verbose_name}: {self.object.nome}"
+        return context
+
+class CargoUpdateView(BaseHierarquiaUpdateView):
+    model = Cargo
+    form_class = CargoForm
+    success_message = "Cargo atualizado com sucesso!"
+
+class PatenteUpdateView(BaseHierarquiaUpdateView):
+    model = Patente
+    form_class = PatenteForm
+    success_message = "Patente atualizada com sucesso!"
+
+class FuncaoUpdateView(BaseHierarquiaUpdateView):
+    model = Funcao
+    form_class = FuncaoForm
+    success_message = "Função atualizada com sucesso!"
+
+class BaseHierarquiaDeleteView(BaseGerenciarView, SuccessMessageMixin, DeleteView):
+    template_name = 'partials/generic_confirm_delete.html'
+    def get_queryset(self):
+        return self.model.objects.filter(instituicao=self.instituicao)
+    def get_success_url(self):
+        return reverse_lazy('instituicao:gerenciar_hierarquia', kwargs={'instituicao_pk': self.object.instituicao.pk})
+
+class CargoDeleteView(BaseHierarquiaDeleteView):
+    model = Cargo
+    success_message = "Cargo excluído com sucesso!"
+
+class PatenteDeleteView(BaseHierarquiaDeleteView):
+    model = Patente
+    success_message = "Patente excluída com sucesso!"
+
+class FuncaoDeleteView(BaseHierarquiaDeleteView):
+    model = Funcao
+    success_message = "Função excluída com sucesso!"
 
 
 # --- Views de Tipo de Instituição (Global) ---

@@ -266,12 +266,14 @@ base_custom/
 │   ├── _bases
 │   │   ├── base.html
 │   │   ├── institucional_base.html
-│   │   └── lobby_base.html
+│   │   ├── lobby_base.html
+│   │   └── public_base.html
 │   ├── autenticacao
 │   │   └── login.html
 │   ├── instituicao
 │   │   ├── detalhe_instituicao.html
 │   │   ├── gerenciar
+│   │   │   ├── gerenciar_hierarquia.html
 │   │   │   └── painel.html
 │   │   ├── instituicao_form.html
 │   │   ├── lista_instituicoes.html

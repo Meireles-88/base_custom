@@ -1,25 +1,40 @@
-# instituicao/forms.py
 from django import forms
 from .models import TipoInstituicao, Instituicao, Municipio
 
 class TipoInstituicaoForm(forms.ModelForm):
+    """
+    Formulário para criar/editar os Tipos de Instituição globais,
+    gerenciado pelo Admin Nível SI.
+    """
     class Meta:
         model = TipoInstituicao
         fields = ['nome']
-        widgets = { 'nome': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Guarda Civil Municipal'})}
-        labels = { 'nome': 'Nome do Tipo de Instituição' }
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Guarda Civil Municipal'})
+        }
+        labels = {
+            'nome': 'Nome do Tipo de Instituição'
+        }
 
 class InstituicaoForm(forms.ModelForm):
+    """
+    Formulário para o Admin SI criar ou editar uma Instituição específica.
+    """
+    # O queryset de municípios começará vazio e será preenchido dinamicamente via JavaScript.
     municipio = forms.ModelChoiceField(
         queryset=Municipio.objects.none(),
         label="Município",
-        widget=forms.Select(attrs={'class': 'form-select'})
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        help_text="Selecione um estado primeiro para carregar a lista de municípios."
     )
+    
     class Meta:
         model = Instituicao
+        # Lista de todos os campos que aparecerão no formulário.
+        # 'nome_gerado' não está aqui, pois é gerado automaticamente pelo modelo.
         fields = [
-            'tipo', 'municipio', 'cnpj', 'contato', 'email_institucional', 'plano_contratado', 
-            'logradouro', 'numero', 'bairro', 'cep',
+            'tipo', 'municipio', 'cnpj', 'contato', 'email_institucional', 
+            'plano_contratado', 'logradouro', 'numero', 'bairro', 'cep',
             'brasao_instituicao', 'brasao_municipio'
         ]
         widgets = {

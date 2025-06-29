@@ -6,20 +6,35 @@
 {% block lobby_content %}
     <div class="page-header">
         <h1 class="page-header-title">Meu Painel</h1>
-        <p>Selecione uma instituição para acessar seu ambiente de trabalho.</p>
+        <p class="text-muted">Selecione uma instituição para acessar seu ambiente de trabalho ou gerencie o sistema.</p>
     </div>
     
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}info{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <div class="row g-4">
         {% for instituicao in instituicoes_vinculadas %}
             <div class="col-md-6 col-lg-4">
+                {# --- LINK MODIFICADO --- #}
+                {# Agora aponta para a view 'entrar_contexto', passando o ID da instituição #}
                 <a href="{% url 'instituicao:entrar_contexto' instituicao.pk %}" class="card-link">
                     <div class="card institution-card h-100">
                         <div class="card-body text-center d-flex flex-column">
                             <img src="{% if instituicao.brasao_instituicao %}{{ instituicao.brasao_instituicao.url }}{% else %}{% static 'images/brasao_instituicao_default.png' %}{% endif %}" alt="Brasão" class="institution-card-logo">
                             <h5 class="card-title mt-3">{{ instituicao.nome_gerado }}</h5>
-                            <p class="card-text text-muted flex-grow-1">{{ instituicao.municipio.nome }}</p>
+                            <p class="card-text text-muted flex-grow-1">{{ instituicao.municipio.nome }} - {{ instituicao.municipio.estado.uf }}</p>
+                            
+                            {# Distinção visual para o Admin SI #}
                             {% if user.is_superuser %}
                                 <span class="badge bg-primary mt-auto">Gerenciar como Admin SI</span>
+                            {% else %}
+                                <span class="badge bg-success mt-auto">Acessar Ambiente</span>
                             {% endif %}
                         </div>
                     </div>
@@ -29,8 +44,13 @@
             <div class="col-12">
                 <div class="content-card text-center">
                     <h4>Você ainda não possui vínculo com nenhuma instituição.</h4>
-                    <p>Utilize a busca para encontrar sua instituição e solicitar o vínculo.</p>
-                    <a href="#" class="btn btn-primary-custom mt-2">Buscar Instituições</a>
+                    {% if not user.is_superuser %}
+                        <p>Utilize a busca para encontrar sua instituição e solicitar o vínculo.</p>
+                        <a href="#" class="btn btn-primary-custom mt-2">Buscar Instituições</a>
+                    {% else %}
+                        <p>Comece adicionando novas instituições ao sistema.</p>
+                        <a href="{% url 'instituicao:lista_instituicoes' %}" class="btn btn-primary-custom mt-2">Gerenciar Instituições</a>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

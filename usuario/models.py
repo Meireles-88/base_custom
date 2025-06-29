@@ -16,8 +16,7 @@ class Cargo(models.Model):
         ordering = ['instituicao', 'nome']
         unique_together = [['instituicao', 'nome']]
     def __str__(self): return f"{self.nome} ({self.instituicao.municipio.nome})"
-    def get_absolute_url(self):
-        return reverse('usuario:edita_cargo', kwargs={'instituicao_pk': self.instituicao.pk, 'pk': self.pk})
+    def get_absolute_url(self): return reverse('instituicao:edita_cargo', kwargs={'instituicao_pk': self.instituicao.pk, 'pk': self.pk})
 
 class Patente(models.Model):
     instituicao = models.ForeignKey(Instituicao, on_delete=models.CASCADE, related_name='patentes', verbose_name="Instituição")
@@ -29,8 +28,7 @@ class Patente(models.Model):
         ordering = ['instituicao', 'ordem']
         unique_together = [['instituicao', 'nome']]
     def __str__(self): return f"{self.nome} ({self.instituicao.municipio.nome})"
-    def get_absolute_url(self):
-        return reverse('usuario:edita_patente', kwargs={'instituicao_pk': self.instituicao.pk, 'pk': self.pk})
+    def get_absolute_url(self): return reverse('instituicao:edita_patente', kwargs={'instituicao_pk': self.instituicao.pk, 'pk': self.pk})
 
 class Funcao(models.Model):
     instituicao = models.ForeignKey(Instituicao, on_delete=models.CASCADE, related_name='funcoes', verbose_name="Instituição")
@@ -41,8 +39,7 @@ class Funcao(models.Model):
         ordering = ['instituicao', 'nome']
         unique_together = [['instituicao', 'nome']]
     def __str__(self): return f"{self.nome} ({self.instituicao.municipio.nome})"
-    def get_absolute_url(self):
-        return reverse('usuario:edita_funcao', kwargs={'instituicao_pk': self.instituicao.pk, 'pk': self.pk})
+    def get_absolute_url(self): return reverse('instituicao:edita_funcao', kwargs={'instituicao_pk': self.instituicao.pk, 'pk': self.pk})
 
 class UserProfile(models.Model):
     class StatusVinculo(models.TextChoices):

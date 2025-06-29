@@ -30,18 +30,20 @@
             </div>
 
             <ul class="sidebar-menu">
-                <li class="sidebar-menu-item">
-                    <a href="{% url 'instituicao:detalhe_instituicao' instituicao_ativa.pk %}">
-                        <i class="bi bi-speedometer2"></i><span>Painel Institucional</span>
-                    </a>
-                </li>
-                <li class="sidebar-menu-item">
-                    <a href="#"><i class="bi bi-journal-text"></i><span>Ocorrências</span></a>
-                </li>
-                 {% if user.is_superuser or user.userprofile.is_admin_instituicao %}
-                    <li class="sidebar-menu-divider"><hr><span class="sidebar-menu-title">Gestão</span></li>
-                    <li class="sidebar-menu-item"><a href="{% url 'instituicao:lista_membros' instituicao_ativa.pk %}"><i class="bi bi-people-fill"></i><span>Gerenciar Efetivo</span></a></li>
-                    <li class="sidebar-menu-item"><a href="{% url 'instituicao:gerenciar_hierarquia' instituicao_ativa.pk %}"><i class="bi bi-diagram-3-fill"></i><span>Hierarquia</span></a></li>
+                {% if instituicao_ativa %}
+                    <li class="sidebar-menu-item">
+                        <a href="{% url 'instituicao:detalhe_instituicao' instituicao_ativa.pk %}">
+                            <i class="bi bi-speedometer2"></i><span>Painel Institucional</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-item">
+                        <a href="#"><i class="bi bi-journal-text"></i><span>Ocorrências</span></a>
+                    </li>
+                    {% if user.is_superuser or user.userprofile.is_admin_instituicao %}
+                        <li class="sidebar-menu-divider"><hr><span class="sidebar-menu-title">Gestão</span></li>
+                        <li class="sidebar-menu-item"><a href="{% url 'instituicao:lista_membros' instituicao_ativa.pk %}"><i class="bi bi-people-fill"></i><span>Gerenciar Efetivo</span></a></li>
+                        <li class="sidebar-menu-item"><a href="{% url 'instituicao:gerenciar_hierarquia' instituicao_pk=instituicao_ativa.pk %}"><i class="bi bi-diagram-3-fill"></i><span>Hierarquia</span></a></li>
+                    {% endif %}
                 {% endif %}
             </ul>
         </aside>
@@ -49,8 +51,9 @@
         <header class="top-navbar">
             <div class="top-navbar-left">
                 <button class="toggle-sidebar-btn"><i class="bi bi-list"></i></button>
-                {% if user.is_superuser %}
-                    <a href="{% url 'painel:sair_contexto_institucional' %}" class="btn btn-sm btn-outline-warning ms-3">
+                {% if user.is_superuser and 'managing_institution_id' in request.session %}
+                    {# --- LINK CORRIGIDO --- #}
+                    <a href="{% url 'instituicao:sair_contexto' %}" class="btn btn-sm btn-outline-warning ms-3">
                         <i class="bi bi-arrow-left-circle"></i> Voltar à Visão Global
                     </a>
                 {% endif %}

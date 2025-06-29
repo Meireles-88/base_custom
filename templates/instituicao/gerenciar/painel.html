@@ -3,9 +3,44 @@
 {% block title %}Gerenciar {{ instituicao.nome_gerado }}{% endblock %}
 
 {% block institutional_content %}
-    <div class="page-header">
-        <h2 class="page-header-title">Painel de Gerenciamento</h2>
-        <p class="text-muted">Você está gerenciando: <strong>{{ instituicao.nome_gerado }}</strong></p>
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="page-header-title mb-0">Painel de Gerenciamento</h2>
+            <p class="text-muted mb-0">Você está no painel de controle da instituição: <strong>{{ instituicao.nome_gerado }}</strong></p>
+        </div>
+        <a href="{% url 'instituicao:detalhe_instituicao' instituicao.pk %}" class="btn btn-secondary-custom"><i class="bi bi-arrow-left"></i> Voltar ao Perfil</a>
     </div>
-    {# ... O resto do conteúdo do painel (os cards) continua aqui ... #}
+
+    <div class="row g-4 mt-2">
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body text-center d-flex flex-column">
+                    <div class="mb-3"><i class="bi bi-people-fill fs-1 text-success"></i></div>
+                    <h5 class="card-title">Gerenciar Efetivo</h5>
+                    <p class="card-text flex-grow-1">Visualize os membros da instituição e atribua seus cargos, patentes e funções.</p>
+                    <a href="{% url 'instituicao:lista_membros' instituicao.pk %}" class="btn btn-success">Acessar Efetivo</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body text-center d-flex flex-column">
+                    <div class="mb-3"><i class="bi bi-diagram-3-fill fs-1 text-primary"></i></div>
+                    <h5 class="card-title">Gerenciar Hierarquia</h5>
+                    <p class="card-text flex-grow-1">Defina os Cargos, Patentes e Funções disponíveis para esta instituição.</p>
+                    <a href="{% url 'instituicao:gerenciar_hierarquia' instituicao.pk %}" class="btn btn-primary-custom">Definir Hierarquia</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body text-center d-flex flex-column">
+                    <div class="mb-3"><i class="bi bi-inbox-fill fs-1 text-warning"></i></div>
+                    <h5 class="card-title">Vínculos Pendentes</h5>
+                    <p class="card-text flex-grow-1">Aprove ou rejeite as solicitações de novos membros para se juntarem à instituição.</p>
+                    <a href="#" class="btn btn-warning">Ver Solicitações</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

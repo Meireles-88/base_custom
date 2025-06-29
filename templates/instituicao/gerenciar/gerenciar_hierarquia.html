@@ -8,8 +8,102 @@
             <h2 class="page-header-title mb-0">Gerenciar Hierarquia Local</h2>
             <p class="text-muted mb-0">Para a instituição: <strong>{{ instituicao.nome_gerado }}</strong></p>
         </div>
-        <a href="{% url 'instituicao:gerenciar_instituicao' instituicao.pk %}" class="btn btn-secondary-custom"><i class="bi bi-arrow-left"></i> Voltar</a>
+        <a href="{% url 'instituicao:gerenciar_instituicao' instituicao.pk %}" class="btn btn-secondary-custom"><i class="bi bi-arrow-left"></i> Voltar ao Painel</a>
     </div>
 
-    {# O restante do template com as 3 colunas de gerenciamento vai aqui... #}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %} mt-3">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row mt-3 g-4">
+        <div class="col-lg-4 d-flex flex-column">
+            <div class="content-card flex-grow-1">
+                <h5><i class="bi bi-person-badge"></i> Cargos</h5>
+                <hr>
+                <form action="{% url 'instituicao:gerenciar_hierarquia' instituicao.pk %}" method="post" class="mb-3">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="cargo">
+                    <label for="{{ cargo_form.nome.id_for_label }}" class="form-label small">Adicionar novo cargo:</label>
+                    <div class="input-group">
+                        {{ cargo_form.nome }}
+                        <button class="btn btn-outline-success" type="submit" title="Adicionar"><i class="bi bi-plus-lg"></i></button>
+                    </div>
+                    {% for error in cargo_form.nome.errors %}<small class="text-danger d-block mt-1">{{ error }}</small>{% endfor %}
+                </form>
+                <ul class="list-group list-group-flush">
+                    {% for cargo in cargos %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ cargo.nome }}
+                            <span class="actions-group">
+                                <a href="{% url 'instituicao:edita_cargo' instituicao_pk=instituicao.pk pk=cargo.pk %}" class="btn btn-sm btn-light py-0 px-1" title="Editar"><i class="bi bi-pencil-fill"></i></a>
+                                <a href="{% url 'instituicao:exclui_cargo' instituicao_pk=instituicao.pk pk=cargo.pk %}" class="btn btn-sm btn-light py-0 px-1 text-danger" title="Excluir"><i class="bi bi-trash-fill"></i></a>
+                            </span>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">Nenhum cargo cadastrado.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-4 d-flex flex-column">
+            <div class="content-card flex-grow-1">
+                <h5><i class="bi bi-award"></i> Patentes</h5>
+                <hr>
+                <form action="{% url 'instituicao:gerenciar_hierarquia' instituicao.pk %}" method="post" class="mb-3">
+                     {% csrf_token %}
+                    <input type="hidden" name="form_type" value="patente">
+                    <div class="row g-2 align-items-center">
+                        <div class="col-sm-8"><label for="{{ patente_form.nome.id_for_label }}" class="form-label small">Nova Patente:</label>{{ patente_form.nome }}</div>
+                        <div class="col-sm-4"><label for="{{ patente_form.ordem.id_for_label }}" class="form-label small">Ordem:</label>{{ patente_form.ordem }}</div>
+                    </div>
+                    <button class="btn btn-outline-success w-100 mt-2" type="submit">Adicionar Patente</button>
+                </form>
+                <ul class="list-group list-group-flush mt-3">
+                    {% for patente in patentes %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>{{ patente.nome }} <small class="text-muted">(Ordem: {{ patente.ordem }})</small></span>
+                        <span class="actions-group">
+                            <a href="{% url 'instituicao:edita_patente' instituicao_pk=instituicao.pk pk=patente.pk %}" class="btn btn-sm btn-light py-0 px-1" title="Editar"><i class="bi bi-pencil-fill"></i></a>
+                            <a href="{% url 'instituicao:exclui_patente' instituicao_pk=instituicao.pk pk=patente.pk %}" class="btn btn-sm btn-light py-0 px-1 text-danger" title="Excluir"><i class="bi bi-trash-fill"></i></a>
+                        </span>
+                    </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">Nenhuma patente cadastrada.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-4 d-flex flex-column">
+            <div class="content-card flex-grow-1">
+                <h5><i class="bi bi-person-rolodex"></i> Funções</h5>
+                <hr>
+                <form action="{% url 'instituicao:gerenciar_hierarquia' instituicao.pk %}" method="post" class="mb-3">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="funcao">
+                    <label for="{{ funcao_form.nome.id_for_label }}" class="form-label small">Nova Função:</label>
+                    <div class="input-group">
+                        {{ funcao_form.nome }}
+                        <button class="btn btn-outline-success" type="submit" title="Adicionar"><i class="bi bi-plus-lg"></i></button>
+                    </div>
+                </form>
+                <ul class="list-group list-group-flush">
+                    {% for funcao in funcoes %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ funcao.nome }}
+                        <span class="actions-group">
+                            <a href="{% url 'instituicao:edita_funcao' instituicao_pk=instituicao.pk pk=funcao.pk %}" class="btn btn-sm btn-light py-0 px-1" title="Editar"><i class="bi bi-pencil-fill"></i></a>
+                            <a href="{% url 'instituicao:exclui_funcao' instituicao_pk=instituicao.pk pk=funcao.pk %}" class="btn btn-sm btn-light py-0 px-1 text-danger" title="Excluir"><i class="bi bi-trash-fill"></i></a>
+                        </span>
+                    </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">Nenhuma função cadastrada.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
 {% endblock %}
