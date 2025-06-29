@@ -1,0 +1,38 @@
+{% extends '_bases/lobby_base.html' %}
+{% load static %}
+
+{% block title %}Meu Painel - Sistema SI{% endblock %}
+
+{% block lobby_content %}
+    <div class="page-header">
+        <h1 class="page-header-title">Meu Painel</h1>
+        <p>Selecione uma instituição para acessar seu ambiente de trabalho.</p>
+    </div>
+    
+    <div class="row g-4">
+        {% for instituicao in instituicoes_vinculadas %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{% url 'instituicao:entrar_contexto' instituicao.pk %}" class="card-link">
+                    <div class="card institution-card h-100">
+                        <div class="card-body text-center d-flex flex-column">
+                            <img src="{% if instituicao.brasao_instituicao %}{{ instituicao.brasao_instituicao.url }}{% else %}{% static 'images/brasao_instituicao_default.png' %}{% endif %}" alt="Brasão" class="institution-card-logo">
+                            <h5 class="card-title mt-3">{{ instituicao.nome_gerado }}</h5>
+                            <p class="card-text text-muted flex-grow-1">{{ instituicao.municipio.nome }}</p>
+                            {% if user.is_superuser %}
+                                <span class="badge bg-primary mt-auto">Gerenciar como Admin SI</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="content-card text-center">
+                    <h4>Você ainda não possui vínculo com nenhuma instituição.</h4>
+                    <p>Utilize a busca para encontrar sua instituição e solicitar o vínculo.</p>
+                    <a href="#" class="btn btn-primary-custom mt-2">Buscar Instituições</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

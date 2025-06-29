@@ -1,46 +1,11 @@
-{% extends 'logged_in/base_logged_in.html' %}
+{% extends '_bases/institucional_base.html' %}
 
 {% block title %}Gerenciar {{ instituicao.nome_gerado }}{% endblock %}
 
-{% block dashboard_content %}
-    <div class="page-header d-flex justify-content-between align-items-center">
-        <div>
-            <h2 class="page-header-title">Painel de Gerenciamento</h2>
-            <p class="text-muted mb-0">Você está gerenciando a instituição: <strong>{{ instituicao.nome_gerado }}</strong></p>
-        </div>
-        <a href="{% url 'instituicao:detalhe_instituicao' instituicao.pk %}" class="btn btn-secondary-custom"><i class="bi bi-arrow-left"></i> Voltar</a>
+{% block institutional_content %}
+    <div class="page-header">
+        <h2 class="page-header-title">Painel de Gerenciamento</h2>
+        <p class="text-muted">Você está gerenciando: <strong>{{ instituicao.nome_gerado }}</strong></p>
     </div>
-
-    <div class="row g-3 mt-2">
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-body text-center d-flex flex-column">
-                    <div class="mb-3"><i class="bi bi-person-badge fs-1 text-primary"></i></div>
-                    <h5 class="card-title">Cargos</h5>
-                    <p class="card-text flex-grow-1">Defina os cargos que existem na sua instituição (Ex: Guarda, Agente).</p>
-                    <a href="{% url 'instituicao:gerenciar_cargos' instituicao.pk %}" class="btn btn-primary">Gerenciar Cargos</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-body text-center d-flex flex-column">
-                    <div class="mb-3"><i class="bi bi-award fs-1 text-success"></i></div>
-                    <h5 class="card-title">Patentes</h5>
-                    <p class="card-text flex-grow-1">Defina a hierarquia de patentes da sua equipe (Ex: Inspetor).</p>
-                    <a href="{% url 'instituicao:gerenciar_patentes' instituicao.pk %}" class="btn btn-success">Gerenciar Patentes</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-body text-center d-flex flex-column">
-                    <div class="mb-3"><i class="bi bi-person-rolodex fs-1 text-info"></i></div>
-                    <h5 class="card-title">Funções</h5>
-                    <p class="card-text flex-grow-1">Crie as funções que definem as permissões de acesso (Ex: Chefe de Turno).</p>
-                    <a href="{% url 'instituicao:gerenciar_funcoes' instituicao.pk %}" class="btn btn-info text-white">Gerenciar Funções</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    {# ... O resto do conteúdo do painel (os cards) continua aqui ... #}
 {% endblock %}

@@ -1,0 +1,74 @@
+{% extends '_bases/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/logged_in_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.css' %}">
+    {% block extra_institutional_head %}{% endblock %}
+{% endblock %}
+
+{% block body_attributes %}class="sidebar-minimized-desktop"{% endblock %}
+
+{% block content %}
+    <div class="dashboard-wrapper">
+        <aside class="sidebar" aria-label="Navegação Principal">
+            <div class="sidebar-header">
+                <a href="{% url 'painel:dashboard' %}" class="system-logo" aria-label="Voltar ao Lobby">
+                    <img src="{% static 'images/brasao_si.png' %}" alt="Brasão do Sistema" class="system-emblem">
+                    <span class="logo-text">Segurança Integrada</span>
+                </a>
+            </div>
+
+            <div class="institution-info-area">
+                {% if instituicao_ativa %}
+                    <img src="{% if instituicao_ativa.brasao_instituicao %}{{ instituicao_ativa.brasao_instituicao.url }}{% else %}{% static 'images/brasao_instituicao_default.png' %}{% endif %}" alt="Brasão da Instituição" class="institution-emblem">
+                    <div class="institution-details">
+                        <span class="institution-type">{{ instituicao_ativa.tipo.nome }}</span>
+                        <span class="institution-location">{{ instituicao_ativa.municipio.nome }}</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item">
+                    <a href="{% url 'instituicao:detalhe_instituicao' instituicao_ativa.pk %}">
+                        <i class="bi bi-speedometer2"></i><span>Painel Institucional</span>
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="#"><i class="bi bi-journal-text"></i><span>Ocorrências</span></a>
+                </li>
+                 {% if user.is_superuser or user.userprofile.is_admin_instituicao %}
+                    <li class="sidebar-menu-divider"><hr><span class="sidebar-menu-title">Gestão</span></li>
+                    <li class="sidebar-menu-item"><a href="{% url 'instituicao:lista_membros' instituicao_ativa.pk %}"><i class="bi bi-people-fill"></i><span>Gerenciar Efetivo</span></a></li>
+                    <li class="sidebar-menu-item"><a href="{% url 'instituicao:gerenciar_hierarquia' instituicao_ativa.pk %}"><i class="bi bi-diagram-3-fill"></i><span>Hierarquia</span></a></li>
+                {% endif %}
+            </ul>
+        </aside>
+
+        <header class="top-navbar">
+            <div class="top-navbar-left">
+                <button class="toggle-sidebar-btn"><i class="bi bi-list"></i></button>
+                {% if user.is_superuser %}
+                    <a href="{% url 'painel:sair_contexto_institucional' %}" class="btn btn-sm btn-outline-warning ms-3">
+                        <i class="bi bi-arrow-left-circle"></i> Voltar à Visão Global
+                    </a>
+                {% endif %}
+            </div>
+            <div class="user-profile-widget">
+                 <img src="{% if user.userprofile.foto %}{{ user.userprofile.foto.url }}{% else %}{% static 'images/avatar_default.png' %}{% endif %}" alt="Avatar" class="user-avatar-top">
+                <span class="user-name-top">{{ user.get_full_name|default:user.username }}</span>
+                <form action="{% url 'autenticacao:logout' %}" method="post" style="display: inline;"><{% csrf_token %}<button type="submit" class="logout-link">Sair</button></form>
+            </div>
+        </header>
+
+        <main class="content-area">
+            {% block institutional_content %}{% endblock %}
+        </main>
+    </div>
+{% endblock content %}
+
+{% block extra_js %}
+    <script src="{% static 'js/dashboard_sidebar.js' %}"></script>
+    {% block extra_institutional_js %}{% endblock %}
+{% endblock %}

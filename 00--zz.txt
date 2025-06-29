@@ -6,6 +6,15 @@
 
     python manage.py createsuperuser
 
+    python manage.py startapp novo_app
+
+
+    Gerar a Estrutura Real
+    cmd
+    ativar venv - venv\Scripts\activate
+        tree -I "venv|__pycache__|*.pyc|db.sqlite3" > estrutura_atualizada.txt
+
+
 
 #########################################################################################
 Bash

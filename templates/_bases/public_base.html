@@ -1,0 +1,56 @@
+{% extends '_bases/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    {# Carrega o CSS específico da área pública #}
+    <link rel="stylesheet" href="{% static 'css/public_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+    <header class="public-header-navbar-floating">
+        <div class="container navbar-container">
+            <a href="{% url 'painel:home' %}" class="navbar-brand-logo">
+                <img src="{% static 'images/brasao_si.png' %}" alt="Brasão SI" class="brasao-logo">
+                <span class="logo-text">Sistema SI</span>
+            </a>
+            <nav class="public-nav">
+                <ul class="public-nav-list">
+                    <li class="nav-item"><a href="{% url 'painel:home' %}" class="nav-link {% if request.path == '/' %}active{% endif %}">Início</a></li>
+                    <li class="nav-item"><a href="{% url 'painel:home' %}#sobre" class="nav-link">Sobre</a></li>
+                    <li class="nav-item"><a href="{% url 'painel:home' %}#servicos" class="nav-link">Serviços</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a href="{% url 'painel:dashboard' %}" class="nav-link nav-link-item btn-dashboard">Painel</a>
+                        </li>
+                        <li class="nav-item">
+                            <form action="{% url 'autenticacao:logout' %}" method="post" style="margin: 0; padding: 0;">
+                                {% csrf_token %}
+                                <button type="submit" class="nav-link nav-link-item btn-logout">Sair</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a href="{% url 'autenticacao:login' %}" class="nav-link nav-link-item btn-login">Entrar</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="public-content-wrapper">
+        {% block main_public_content %}
+            {# O conteúdo da página pública, como a home.html, será injetado aqui #}
+        {% endblock %}
+    </main>
+
+    <footer class="main-footer">
+        <div class="container footer-content">
+            <p>&copy; 2025 Sistema SI. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+{% endblock content %}
+
+{% block extra_js %}
+    <script src="{% static 'js/public_scripts.js' %}"></script>
+{% endblock extra_js %}

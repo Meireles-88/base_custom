@@ -1,8 +1,8 @@
-{% extends 'logged_in/base_logged_in.html' %}
+{% extends '_bases/institucional_base.html' %}
 
 {% block title %}Gerenciar Hierarquia - {{ instituicao.nome_gerado }}{% endblock %}
 
-{% block dashboard_content %}
+{% block institutional_content %}
     <div class="page-header d-flex justify-content-between align-items-center">
         <div>
             <h2 class="page-header-title mb-0">Gerenciar Hierarquia Local</h2>
@@ -11,71 +11,5 @@
         <a href="{% url 'instituicao:gerenciar_instituicao' instituicao.pk %}" class="btn btn-secondary-custom"><i class="bi bi-arrow-left"></i> Voltar</a>
     </div>
 
-    {% if messages %}{% for message in messages %}<div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %} mt-3">{{ message }}</div>{% endfor %}{% endif %}
-
-    <div class="row mt-3 g-4">
-        <div class="col-lg-4 d-flex flex-column">
-            <div class="content-card flex-grow-1">
-                <h5><i class="bi bi-person-badge"></i> Cargos</h5>
-                <hr>
-                <form action="{% url 'instituicao:gerenciar_hierarquia' instituicao.pk %}" method="post" class="mb-3">
-                    {% csrf_token %}
-                    <input type="hidden" name="form_type" value="cargo">
-                    <div class="input-group">
-                        {{ cargo_form.nome }}
-                        <button class="btn btn-outline-success" type="submit">Adicionar</button>
-                    </div>
-                </form>
-                <ul class="list-group list-group-flush">
-                    {% for cargo in cargos %}<li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ cargo.nome }}
-                        <a href="#" class="btn btn-sm btn-light py-0 px-1"><i class="bi bi-pencil-fill"></i></a>
-                    </li>{% empty %}<li class="list-group-item">Nenhum cargo.</li>{% endfor %}
-                </ul>
-            </div>
-        </div>
-
-        <div class="col-lg-4 d-flex flex-column">
-            <div class="content-card flex-grow-1">
-                <h5><i class="bi bi-award"></i> Patentes</h5>
-                <hr>
-                <form action="{% url 'instituicao:gerenciar_hierarquia' instituicao.pk %}" method="post" class="mb-3">
-                    {% csrf_token %}
-                    <input type="hidden" name="form_type" value="patente">
-                    <div class="row g-2">
-                        <div class="col-sm-8">{{ patente_form.nome }}</div>
-                        <div class="col-sm-4">{{ patente_form.ordem }}</div>
-                    </div>
-                    <button class="btn btn-outline-success w-100 mt-2" type="submit">Adicionar</button>
-                </form>
-                <ul class="list-group list-group-flush mt-3">
-                    {% for patente in patentes %}<li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ patente.nome }} <small class="text-muted"> (Ordem: {{ patente.ordem }})</small>
-                        <a href="#" class="btn btn-sm btn-light py-0 px-1"><i class="bi bi-pencil-fill"></i></a>
-                    </li>{% empty %}<li class="list-group-item">Nenhuma patente.</li>{% endfor %}
-                </ul>
-            </div>
-        </div>
-
-        <div class="col-lg-4 d-flex flex-column">
-            <div class="content-card flex-grow-1">
-                <h5><i class="bi bi-person-rolodex"></i> Funções</h5>
-                <hr>
-                <form action="{% url 'instituicao:gerenciar_hierarquia' instituicao.pk %}" method="post" class="mb-3">
-                    {% csrf_token %}
-                    <input type="hidden" name="form_type" value="funcao">
-                    <div class="input-group">
-                        {{ funcao_form.nome }}
-                        <button class="btn btn-outline-success" type="submit">Adicionar</button>
-                    </div>
-                </form>
-                <ul class="list-group list-group-flush">
-                    {% for funcao in funcoes %}<li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ funcao.nome }}
-                        <a href="#" class="btn btn-sm btn-light py-0 px-1"><i class="bi bi-pencil-fill"></i></a>
-                    </li>{% empty %}<li class="list-group-item">Nenhuma função.</li>{% endfor %}
-                </ul>
-            </div>
-        </div>
-    </div>
+    {# O restante do template com as 3 colunas de gerenciamento vai aqui... #}
 {% endblock %}

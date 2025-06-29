@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, View
 from django.contrib.messages.views import SuccessMessageMixin
@@ -8,10 +8,38 @@ from django.shortcuts import get_object_or_404, render, redirect
 
 # Importações de Modelos, Formulários e Mixins
 from .models import Instituicao, TipoInstituicao, Estado, Municipio
-from usuario.models import UserProfile, Cargo, Patente, Funcao
+from usuario.models import UserProfile
 from .forms import InstituicaoForm, TipoInstituicaoForm
 from usuario.forms import CargoForm, PatenteForm, FuncaoForm
 from .mixins import SuperuserRequiredMixin, InstituicaoAdminRequiredMixin
+
+
+
+# --- VIEWS PARA MUDANÇA DE CONTEXTO ---
+@login_required
+def entrar_contexto_institucional(request, pk):
+    """ Salva na sessão o ID da instituição que o Admin SI quer gerenciar e o redireciona. """
+    if not request.user.is_superuser:
+        messages.error(request, "Acesso não permitido.")
+        return redirect('painel:dashboard')
+    
+    instituicao = get_object_or_404(Instituicao, pk=pk)
+    request.session['managing_institution_id'] = instituicao.pk
+    messages.info(request, f"Você agora está gerenciando a instituição: {instituicao.nome_gerado}")
+    
+    # Redireciona para o perfil da instituição, agora DENTRO do novo contexto
+    return redirect('instituicao:detalhe_instituicao', pk=instituicao.pk)
+
+@login_required
+def sair_contexto_institucional(request):
+    """ Limpa da sessão o ID da instituição, retornando o Admin SI à visão global (Lobby). """
+    if 'managing_institution_id' in request.session:
+        del request.session['managing_institution_id']
+        messages.info(request, "Você retornou à Visão Global do Administrador SI.")
+        
+    return redirect('painel:dashboard')
+
+
 
 # --- Views de Gerenciamento Geral de Instituições (para Admin SI) ---
 
@@ -36,7 +64,7 @@ class InstituicaoCreateView(SuperuserRequiredMixin, SuccessMessageMixin, CreateV
                 form.fields['municipio'].queryset = Municipio.objects.filter(estado_id=estado_id).order_by('nome')
             except (ValueError, TypeError): pass
         return form
-
+    
     def form_invalid(self, form):
         messages.error(self.request, "Não foi possível salvar a instituição. Por favor, corrija os erros abaixo.")
         return super().form_invalid(form)
@@ -125,150 +153,52 @@ class BaseGerenciarView(InstituicaoAdminRequiredMixin):
         context['instituicao'] = self.instituicao
         return context
 
-# --- CRUD COMPLETO PARA CARGOS ---
-class CargoListView(BaseGerenciarView, ListView):
-    model = Cargo
-    template_name = 'partials/generic_list.html'
-    context_object_name = 'itens'
-    def get_queryset(self):
-        return Cargo.objects.filter(instituicao=self.instituicao)
+# --- VIEW UNIFICADA PARA GERENCIAR HIERARQUIA ---
+class GerenciarHierarquiaView(BaseGerenciarView, View):
+    template_name = 'instituicao/gerenciar/gerenciar_hierarquia.html'
+
     def get_context_data(self, **kwargs):
+        # A instituicao já é definida no dispatch da classe base
         context = super().get_context_data(**kwargs)
-        context.update({'titulo': "Cargos", 'url_novo': 'instituicao:cria_cargo', 'url_edicao': 'instituicao:edita_cargo', 'url_exclusao': 'instituicao:exclui_cargo'})
+        context.update({
+            'cargos': Cargo.objects.filter(instituicao=self.instituicao),
+            'patentes': Patente.objects.filter(instituicao=self.instituicao),
+            'funcoes': Funcao.objects.filter(instituicao=self.instituicao),
+            'cargo_form': CargoForm(),
+            'patente_form': PatenteForm(),
+            'funcao_form': FuncaoForm(),
+        })
         return context
 
-class CargoCreateView(BaseGerenciarView, SuccessMessageMixin, CreateView):
-    model = Cargo
-    form_class = CargoForm
-    template_name = 'partials/generic_form.html'
-    success_message = "Cargo criado com sucesso!"
-    def form_valid(self, form):
-        form.instance.instituicao = self.instituicao
-        return super().form_valid(form)
-    def get_success_url(self):
-        return reverse_lazy('instituicao:gerenciar_cargos', kwargs={'instituicao_pk': self.instituicao.pk})
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titulo_pagina'] = 'Adicionar Novo Cargo'
-        return context
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return render(request, self.template_name, context)
 
-class CargoUpdateView(BaseGerenciarView, SuccessMessageMixin, UpdateView):
-    model = Cargo
-    form_class = CargoForm
-    template_name = 'partials/generic_form.html'
-    success_message = "Cargo atualizado com sucesso!"
-    def get_queryset(self): return Cargo.objects.filter(instituicao=self.instituicao)
-    def get_success_url(self):
-        return reverse_lazy('instituicao:gerenciar_cargos', kwargs={'instituicao_pk': self.instituicao.pk})
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titulo_pagina'] = f"Editar Cargo: {self.object.nome}"
-        return context
+    def post(self, request, *args, **kwargs):
+        form_type = request.POST.get('form_type')
+        form_map = {'cargo': CargoForm, 'patente': PatenteForm, 'funcao': FuncaoForm}
+        
+        form_class = form_map.get(form_type)
+        if not form_class:
+            messages.error(request, "Ação inválida.")
+            return redirect('instituicao:gerenciar_instituicao', pk=self.instituicao.pk)
 
-class CargoDeleteView(BaseGerenciarView, SuccessMessageMixin, DeleteView):
-    model = Cargo
-    template_name = 'partials/generic_confirm_delete.html'
-    success_message = "Cargo excluído com sucesso!"
-    def get_queryset(self): return Cargo.objects.filter(instituicao=self.instituicao)
-    def get_success_url(self):
-        return reverse_lazy('instituicao:gerenciar_cargos', kwargs={'instituicao_pk': self.instituicao.pk})
-
-# --- CRUD COMPLETO PARA PATENTES ---
-class PatenteListView(BaseGerenciarView, ListView):
-    model = Patente
-    template_name = 'partials/generic_list.html'
-    context_object_name = 'itens'
-    def get_queryset(self): return Patente.objects.filter(instituicao=self.instituicao)
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({'titulo': "Patentes", 'url_novo': 'instituicao:cria_patente', 'url_edicao': 'instituicao:edita_patente', 'url_exclusao': 'instituicao:exclui_patente'})
-        return context
-
-class PatenteCreateView(BaseGerenciarView, SuccessMessageMixin, CreateView):
-    model = Patente
-    form_class = PatenteForm
-    template_name = 'partials/generic_form.html'
-    success_message = "Patente criada com sucesso!"
-    def form_valid(self, form):
-        form.instance.instituicao = self.instituicao
-        return super().form_valid(form)
-    def get_success_url(self):
-        return reverse_lazy('instituicao:gerenciar_patentes', kwargs={'instituicao_pk': self.instituicao.pk})
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titulo_pagina'] = 'Adicionar Nova Patente'
-        return context
-
-class PatenteUpdateView(BaseGerenciarView, SuccessMessageMixin, UpdateView):
-    model = Patente
-    form_class = PatenteForm
-    template_name = 'partials/generic_form.html'
-    success_message = "Patente atualizada com sucesso!"
-    def get_queryset(self): return Patente.objects.filter(instituicao=self.instituicao)
-    def get_success_url(self):
-        return reverse_lazy('instituicao:gerenciar_patentes', kwargs={'instituicao_pk': self.instituicao.pk})
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titulo_pagina'] = f"Editar Patente: {self.object.nome}"
-        return context
-
-class PatenteDeleteView(BaseGerenciarView, SuccessMessageMixin, DeleteView):
-    model = Patente
-    template_name = 'partials/generic_confirm_delete.html'
-    success_message = "Patente excluída com sucesso!"
-    def get_queryset(self): return Patente.objects.filter(instituicao=self.instituicao)
-    def get_success_url(self):
-        return reverse_lazy('instituicao:gerenciar_patentes', kwargs={'instituicao_pk': self.instituicao.pk})
-
-# --- CRUD COMPLETO PARA FUNÇÕES ---
-class FuncaoListView(BaseGerenciarView, ListView):
-    model = Funcao
-    template_name = 'partials/generic_list.html'
-    context_object_name = 'itens'
-    def get_queryset(self): return Funcao.objects.filter(instituicao=self.instituicao)
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({'titulo': "Funções", 'url_novo': 'instituicao:cria_funcao', 'url_edicao': 'instituicao:edita_funcao', 'url_exclusao': 'instituicao:exclui_funcao'})
-        return context
-
-class FuncaoCreateView(BaseGerenciarView, SuccessMessageMixin, CreateView):
-    model = Funcao
-    form_class = FuncaoForm
-    template_name = 'partials/generic_form.html'
-    success_message = "Função criada com sucesso!"
-    def form_valid(self, form):
-        form.instance.instituicao = self.instituicao
-        return super().form_valid(form)
-    def get_success_url(self):
-        return reverse_lazy('instituicao:gerenciar_funcoes', kwargs={'instituicao_pk': self.instituicao.pk})
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titulo_pagina'] = 'Adicionar Nova Função'
-        return context
-
-class FuncaoUpdateView(BaseGerenciarView, SuccessMessageMixin, UpdateView):
-    model = Funcao
-    form_class = FuncaoForm
-    template_name = 'partials/generic_form.html'
-    success_message = "Função atualizada com sucesso!"
-    def get_queryset(self): return Funcao.objects.filter(instituicao=self.instituicao)
-    def get_success_url(self):
-        return reverse_lazy('instituicao:gerenciar_funcoes', kwargs={'instituicao_pk': self.instituicao.pk})
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['titulo_pagina'] = f"Editar Função: {self.object.nome}"
-        return context
-
-class FuncaoDeleteView(BaseGerenciarView, SuccessMessageMixin, DeleteView):
-    model = Funcao
-    template_name = 'partials/generic_confirm_delete.html'
-    success_message = "Função excluída com sucesso!"
-    def get_queryset(self): return Funcao.objects.filter(instituicao=self.instituicao)
-    def get_success_url(self):
-        return reverse_lazy('instituicao:gerenciar_funcoes', kwargs={'instituicao_pk': self.instituicao.pk})
+        form = form_class(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.instituicao = self.instituicao
+            instance.save()
+            messages.success(request, f"{form.Meta.model._meta.verbose_name.title()} adicionado com sucesso!")
+        else:
+            context = self.get_context_data(**kwargs)
+            context[f'{form_type}_form'] = form
+            messages.error(request, f"Erro ao adicionar: {next(iter(form.errors.values()))[0]}")
+            return render(request, self.template_name, context)
+            
+        return redirect('instituicao:gerenciar_hierarquia', instituicao_pk=self.instituicao.pk)
 
 
-# --- Views de Tipo de Instituição (Global, para Admin SI) ---
+# --- Views de Tipo de Instituição (Global) ---
 class TipoInstituicaoView(SuperuserRequiredMixin, View):
     template_name = 'instituicao/tipo/lista.html'
     form_class = TipoInstituicaoForm

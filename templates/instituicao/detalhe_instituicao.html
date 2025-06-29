@@ -1,78 +1,20 @@
-{% extends 'logged_in/base_logged_in.html' %}
+{% extends '_bases/institucional_base.html' %}
 {% load static %}
 
-{% block title %}{{ instituicao.nome_gerado }} - Detalhes da Instituição{% endblock %}
+{% block title %}{{ instituicao.nome_gerado }} - Detalhes{% endblock %}
 
-{% block extra_head %}
-    {{ block.super }}
-    {# Reutilizando o CSS do perfil de usuário para manter a consistência visual #}
-    <link rel="stylesheet" href="{% static 'css/usuario/user_profile_styles.css' %}">
-{% endblock %}
-
-{% block dashboard_content %}
-<div class="profile-page-container">
-    <div class="page-header">
+{% block institutional_content %}
+    <div class="page-header d-flex justify-content-between align-items-center">
         <h2 class="page-header-title">Perfil da Instituição</h2>
+        <a href="{% url 'instituicao:gerenciar_instituicao' instituicao.pk %}" class="btn btn-primary-custom">
+            <i class="bi bi-gear-fill"></i> Painel de Gerenciamento
+        </a>
     </div>
 
-    <div class="user-profile-card">
-        <div class="profile-card-header">
-            <div class="header-emblem">
-                {% if instituicao.brasao_municipio %}
-                    <img src="{{ instituicao.brasao_municipio.url }}" alt="Brasão do Município">
-                {% else %}
-                    <i class="bi bi-shield-slash placeholder-avatar"></i>
-                {% endif %}
-            </div>
-            <div class="header-titles">
-                <span class="institution-name">{{ instituicao.nome_gerado }}</span>
-                <span class="city-name">{{ instituicao.municipio.nome }} - {{ instituicao.municipio.estado.uf }}</span>
-            </div>
-            <div class="header-emblem">
-                {% if instituicao.brasao_instituicao %}
-                    <img src="{{ instituicao.brasao_instituicao.url }}" alt="Brasão da Instituição">
-                {% else %}
-                    <i class="bi bi-shield-slash placeholder-avatar"></i>
-                {% endif %}
-            </div>
-        </div>
-
-        <hr class="profile-divider">
-
-        <div class="profile-card-body">
-            <div class="profile-details-grid">
-                <div class="detail-item">
-                    <span class="detail-label">Tipo de Instituição</span>
-                    <span class="detail-value">{{ instituicao.tipo.nome }}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">CNPJ</span>
-                    <span class="detail-value">{{ instituicao.cnpj|default:"Não informado" }}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">E-mail de Contato</span>
-                    <span class="detail-value">{{ instituicao.email_institucional|default:"Não informado" }}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Contato</span>
-                    <span class="detail-value">{{ instituicao.contato|default:"Não informado" }}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Plano Contratado</span>
-                    <span class="detail-value">{{ instituicao.plano_contratado|default:"Não informado" }}</span>
-                </div>
-                 <div class="detail-item">
-                    <span class="detail-label">Data de Cadastro</span>
-                    <span class="detail-value">{{ instituicao.data_cadastro|date:"d/m/Y" }}</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="profile-card-actions">
-            <a href="{% url 'instituicao:gerenciar_instituicao' instituicao.pk %}" class="btn btn-primary-custom"><i class="bi bi-gear-fill"></i> Gerenciar Instituição</a>
-            <a href="{% url 'instituicao:edita_instituicao' instituicao.pk %}" class="btn btn-update"><i class="bi bi-pencil"></i> Editar Dados</a>
-            <a href="{% url 'instituicao:lista_instituicoes' %}" class="btn btn-secondary-custom"><i class="bi bi-arrow-left"></i> Voltar para a Lista</a>
-        </div>
+    <div class="content-card mt-3">
+        {# O card com os detalhes da instituição vai aqui... #}
+        {# Exemplo: #}
+        <p><strong>CNPJ:</strong> {{ instituicao.cnpj|default:"Não informado" }}</p>
+        <p><strong>Contato:</strong> {{ instituicao.contato|default:"Não informado" }}</p>
     </div>
-</div>
 {% endblock %}

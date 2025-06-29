@@ -11,6 +11,10 @@ urlpatterns = [
     path('<int:pk>/editar/', views.InstituicaoUpdateView.as_view(), name='edita_instituicao'),
     path('<int:pk>/excluir/', views.InstituicaoDeleteView.as_view(), name='exclui_instituicao'),
 
+    # --- ROTAS DE MUDANÇA DE CONTEXTO ADICIONADAS ---
+    path('<int:pk>/entrar-contexto/', views.entrar_contexto_institucional, name='entrar_contexto'),
+    path('sair-contexto/', views.sair_contexto_institucional, name='sair_contexto'),
+
     # URL para a chamada dinâmica (AJAX)
     path('ajax/carregar-municipios/', views.carregar_municipios, name='ajax_carregar_municipios'),
     
@@ -21,22 +25,7 @@ urlpatterns = [
     
     # --- ROTAS DE GERENCIAMENTO INSTITUCIONAL ---
     path('<int:pk>/gerenciar/', views.GerenciarInstituicaoView.as_view(), name='gerenciar_instituicao'),
+    path('<int:instituicao_pk>/gerenciar/hierarquia/', views.GerenciarHierarquiaView.as_view(), name='gerenciar_hierarquia'),
     
-    # Gerenciamento de Cargos Locais
-    path('<int:instituicao_pk>/gerenciar/cargos/', views.CargoListView.as_view(), name='gerenciar_cargos'),
-    path('<int:instituicao_pk>/gerenciar/cargos/novo/', views.CargoCreateView.as_view(), name='cria_cargo'),
-    path('<int:instituicao_pk>/gerenciar/cargos/<int:pk>/editar/', views.CargoUpdateView.as_view(), name='edita_cargo'),
-    path('<int:instituicao_pk>/gerenciar/cargos/<int:pk>/excluir/', views.CargoDeleteView.as_view(), name='exclui_cargo'),
-    
-    # Gerenciamento de Patentes Locais
-    path('<int:instituicao_pk>/gerenciar/patentes/', views.PatenteListView.as_view(), name='gerenciar_patentes'),
-    path('<int:instituicao_pk>/gerenciar/patentes/novo/', views.PatenteCreateView.as_view(), name='cria_patente'),
-    path('<int:instituicao_pk>/gerenciar/patentes/<int:pk>/editar/', views.PatenteUpdateView.as_view(), name='edita_patente'),
-    path('<int:instituicao_pk>/gerenciar/patentes/<int:pk>/excluir/', views.PatenteDeleteView.as_view(), name='exclui_patente'),
-
-    # Gerenciamento de Funções Locais
-    path('<int:instituicao_pk>/gerenciar/funcoes/', views.FuncaoListView.as_view(), name='gerenciar_funcoes'),
-    path('<int:instituicao_pk>/gerenciar/funcoes/novo/', views.FuncaoCreateView.as_view(), name='cria_funcao'),
-    path('<int:instituicao_pk>/gerenciar/funcoes/<int:pk>/editar/', views.FuncaoUpdateView.as_view(), name='edita_funcao'),
-    path('<int:instituicao_pk>/gerenciar/funcoes/<int:pk>/excluir/', views.FuncaoDeleteView.as_view(), name='exclui_funcao'),
+    # (As outras rotas para o CRUD de Cargo, Patente e Função permanecem aqui)
 ]

@@ -702,3 +702,63 @@ body.sidebar-minimized-desktop .sidebar .sidebar-menu-item a i {
     margin-right: 17.5px; /* Garante que os ícones do menu não tenham margem extra */
 }
 
+/* =================================================================== */
+/* ### ESTILOS PARA O LAYOUT DO LOBBY (DASHBOARD GERAL) ### */
+/* =================================================================== */
+
+.top-navbar-lobby {
+    background-color: var(--white);
+    padding: 10px 30px;
+    box-shadow: 0 2px 10px var(--shadow-light);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.system-logo-lobby {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.system-logo-lobby img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.lobby-content-wrapper {
+    padding-top: 80px; /* Altura da navbar + espaço */
+    padding-bottom: 60px; /* Espaço para o rodapé */
+    min-height: calc(100vh - 70px); /* Garante que o conteúdo preencha a tela */
+    background-color: var(--secondary-color);
+}
+
+.institution-card {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background-color: var(--white);
+    height: 100%;
+}
+
+.institution-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+a.card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.institution-card-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+}

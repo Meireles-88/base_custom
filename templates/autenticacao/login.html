@@ -1,5 +1,5 @@
 {# templates/autenticacao/login.html #}
-{% extends 'public/base_public.html' %}
+{% extends '_bases/public_base.html' %}
 {% load static %}
 
 {% block title %}Entrar - Sistema de Segurança Integrada{% endblock %}
@@ -7,32 +7,38 @@
 {% block main_public_content %}
     <div class="container mt-5 mb-5">
         <div class="row justify-content-center">
-            <div class="col-12 col-sm-8 col-md-5 col-lg-4">
-                <div class="card content-card">
-                    <div class="card-header" style="background-color: transparent; border-bottom: none; padding-bottom: 0;">
-                        <h4 class="text-center" style="color: var(--primary-dark); margin-bottom: 15px;">Acesse sua Conta</h4>
-                        <div class="text-center mb-3">
-                            <img src="{% static 'images/brasao_si.png' %}" alt="Brasão SI" style="height: 60px;">
-                        </div>
+            <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+                <div class="card content-card shadow-lg">
+                    <div class="card-header bg-transparent border-bottom-0 pb-0 text-center">
+                        <img src="{% static 'images/brasao_si.png' %}" alt="Brasão SI" style="height: 60px;" class="mb-3">
+                        <h4 class="fw-bold" style="color: var(--primary-dark);">Acesse sua Conta</h4>
                     </div>
-                    <div class="card-body pt-0">
+                    <div class="card-body p-4">
                         {% if messages %}
                             {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
+                                <div class="alert alert-danger text-center">{{ message }}</div>
                             {% endfor %}
                         {% endif %}
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger text-center">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
                         <form method="post" action="{% url 'autenticacao:login' %}">
                             {% csrf_token %}
                             <div class="mb-3">
-                                <label for="id_username" class="form-label" style="color: var(--text-dark);">Usuário:</label>
+                                <label for="id_username" class="form-label">Usuário:</label>
                                 <input type="text" name="username" id="id_username" class="form-control" required>
                             </div>
                             <div class="mb-3">
-                                <label for="id_password" class="form-label" style="color: var(--text-dark);">Senha:</label>
+                                <label for="id_password" class="form-label">Senha:</label>
                                 <input type="password" name="password" id="id_password" class="form-control" required>
                             </div>
                             <div class="d-grid gap-2 mt-4">
-                                <button type="submit" class="btn btn-primary-custom btn-lg-custom">Entrar</button>
+                                <button type="submit" class="btn btn-primary-custom btn-lg">Entrar</button>
                             </div>
                             <input type="hidden" name="next" value="{{ next }}">
                         </form>
